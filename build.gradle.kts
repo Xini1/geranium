@@ -2,8 +2,8 @@ plugins {
     java
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "by.geranium"
+version = "1.0"
 
 repositories {
     mavenCentral()
