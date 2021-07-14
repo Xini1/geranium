@@ -15,7 +15,7 @@ import org.aspectj.lang.annotation.Pointcut;
 @RequiredArgsConstructor
 public class SpringAspectAdapter {
 
-    private final Advice geraniumAdvice;
+    private final Advice advice;
 
     @Pointcut("@within(logAnnotation)")
     void classesWithLogAnnotation(Log logAnnotation) {
@@ -29,6 +29,6 @@ public class SpringAspectAdapter {
 
     @Around("methodsWithLogAnnotation(logAnnotation) || classesWithLogAnnotation(logAnnotation)")
     public Object handleMethodInvocation(ProceedingJoinPoint joinPoint, Log logAnnotation) throws Throwable {
-        return geraniumAdvice.logMethodCall(ProceedingJoinPointMethodCallAdapter.from(joinPoint));
+        return advice.logMethodCall(ProceedingJoinPointMethodCallAdapter.from(joinPoint));
     }
 }
