@@ -12,11 +12,11 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 public class InvocationHandlerAdapter implements InvocationHandler {
 
-    private final Advice geraniumAdvice;
+    private final Advice advice;
     private final Object original;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return geraniumAdvice.logMethodCall(ReflectiveMethodCall.from(original, method, args));
+        return advice.logMethodCall(ReflectiveMethodCall.from(original, method, args));
     }
 }

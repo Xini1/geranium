@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 class Logger {
 
-    private final LoggingStrategyFactory geraniumLoggingStrategyFactory;
+    private final LoggingStrategyFactory loggingStrategyFactory;
 
     void logIn(MethodCall methodCall) {
         getStrategy(methodCall).log(() -> getLogInMessage(methodCall));
@@ -26,11 +26,11 @@ class Logger {
     }
 
     private LoggingStrategy getStrategy(MethodCall methodCall) {
-        return geraniumLoggingStrategyFactory.getStrategy(methodCall.getLoggingLevel(), methodCall.getDeclaringClass());
+        return loggingStrategyFactory.getStrategy(methodCall.getLoggingLevel(), methodCall.getDeclaringClass());
     }
 
     private LoggingStrategy getStrategyForException(MethodCall methodCall) {
-        return geraniumLoggingStrategyFactory.getStrategy(
+        return loggingStrategyFactory.getStrategy(
                 methodCall.getExceptionLoggingLevel(),
                 methodCall.getDeclaringClass()
         );

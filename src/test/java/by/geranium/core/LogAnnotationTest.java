@@ -93,6 +93,17 @@ class LogAnnotationTest {
     }
 
     @Test
+    void givenMethodWithOtherPrimitiveArguments_thenLogArguments() {
+        testObject.methodWithOtherPrimitiveArguments(false, 'a');
+
+        assertThat(testStrategy.getMessages())
+                .containsExactly(
+                        "DEBUG methodWithOtherPrimitiveArguments > booleanArg = false, charArg = a",
+                        "DEBUG methodWithOtherPrimitiveArguments < "
+                );
+    }
+
+    @Test
     void givenMethodWithLogInfoAnnotation_thenLogInfoLevel() {
         testObject.methodWithLogInfo();
 
@@ -129,6 +140,8 @@ class LogAnnotationTest {
 
         void methodWithFloatPointPrimitiveArguments(float floatArg, double doubleArg);
 
+        void methodWithOtherPrimitiveArguments(boolean booleanArg, char charArg);
+
         void methodWithLogInfo();
 
         void overloadedMethod(String str1);
@@ -159,6 +172,10 @@ class LogAnnotationTest {
 
         @Override
         public void methodWithFloatPointPrimitiveArguments(float floatArg, double doubleArg) {
+        }
+
+        @Override
+        public void methodWithOtherPrimitiveArguments(boolean booleanArg, char charArg) {
         }
 
         @Log(LoggingLevel.INFO)
