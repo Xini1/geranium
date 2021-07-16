@@ -5,7 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 import by.geranium.annotation.Log;
-import by.geranium.core.Advice;
+import by.geranium.core.Geranium;
 import by.geranium.core.LoggingLevel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 class SpringAspectAdapterTest {
 
     @MockBean
-    private Advice advice;
+    private Geranium geranium;
     @Autowired
     private TestClass testClass;
 
@@ -31,9 +31,9 @@ class SpringAspectAdapterTest {
     void givenAnnotatedMethod_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.annotatedMethod();
 
-        verify(advice).logMethodCall(argThat(argument -> argument.getDeclaringClass() == TestClass.class &&
+        verify(geranium).logMethodCall(argThat(argument -> argument.getDeclaringClass() == TestClass.class &&
                 argument.getMethodArguments().isEmpty() &&
-                !argument.hasReturnValue() &&
+                argument.getReturnType() == void.class &&
                 argument.getMethodName().equals("annotatedMethod") &&
                 argument.getExceptionLoggingLevel() == LoggingLevel.OFF &&
                 argument.getLoggingLevel() == LoggingLevel.DEBUG));
@@ -43,7 +43,7 @@ class SpringAspectAdapterTest {
     void givenMethodWithoutAnnotation_thenCallMethod_thenAdviceNotInvoked() {
         testClass.methodWithoutAnnotation();
 
-        verifyNoInteractions(advice);
+        verifyNoInteractions(geranium);
     }
 
     static class TestClass {
@@ -61,7 +61,7 @@ class SpringAspectAdapterTest {
     static class TestConfig {
 
         @Bean
-        public SpringAspectAdapter springAspectAdapter(Advice advice) {
+        public SpringAspectAdapter springAspectAdapter(Geranium advice) {
             return new SpringAspectAdapter(advice);
         }
 

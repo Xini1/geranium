@@ -22,6 +22,7 @@ public @interface Log {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD, ElementType.TYPE})
     @interface Error {
         LoggingLevel value() default LoggingLevel.ERROR;
     }
