@@ -9,16 +9,16 @@ import by.geranium.core.LoggingStrategyFactory;
  */
 public class LoggingStrategyFactoryStub implements LoggingStrategyFactory {
 
-    private final LoggingStrategyStub testLoggingStrategy;
+    private final LoggingStrategyStub loggingStrategyStub;
 
-    public LoggingStrategyFactoryStub(LoggingStrategyStub testLoggingStrategy) {
-        this.testLoggingStrategy = testLoggingStrategy;
+    public LoggingStrategyFactoryStub(LoggingStrategyStub loggingStrategyStub) {
+        this.loggingStrategyStub = loggingStrategyStub;
     }
 
     @Override
     public LoggingStrategy getStrategy(LoggingLevel loggingLevel, Class<?> type) {
-        testLoggingStrategy.setLoggingLevel(loggingLevel);
+        loggingStrategyStub.setLoggingLevel(loggingLevel);
 
-        return testLoggingStrategy;
+        return loggingStrategyStub;
     }
 }

@@ -1,6 +1,5 @@
 package by.geranium.core;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Parameter;
@@ -8,18 +7,17 @@ import java.lang.reflect.Parameter;
 /**
  * @author Maxim Tereshchenko
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class MethodArgument {
 
-    private final String name;
+    private final Parameter parameter;
     private final Object value;
 
-    public static MethodArgument from(Parameter parameter, Object value) {
-        return new MethodArgument(parameter.getName(), value);
+    public boolean isSupported(ValueSerializingStrategy valueSerializingStrategy) {
+        return valueSerializingStrategy.isSupported(parameter.getType());
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s = %s", name, value);
+    public String toString(ValueSerializingStrategy valueSerializingStrategy) {
+        return String.format("%s = %s", parameter.getName(), valueSerializingStrategy.serialize(value));
     }
 }

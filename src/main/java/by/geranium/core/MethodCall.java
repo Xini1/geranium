@@ -11,7 +11,7 @@ public interface MethodCall {
 
     String getMethodName();
 
-    boolean hasReturnValue();
+    Class<?> getReturnType();
 
     LoggingLevel getLoggingLevel();
 

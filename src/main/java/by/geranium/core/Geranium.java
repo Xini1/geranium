@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
  * @author Maxim Tereshchenko
  */
 @RequiredArgsConstructor
-public class Advice {
+public class Geranium {
 
     private final Logger logger;
 

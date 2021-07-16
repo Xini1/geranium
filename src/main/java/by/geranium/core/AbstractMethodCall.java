@@ -25,8 +25,8 @@ public abstract class AbstractMethodCall implements MethodCall {
     }
 
     @Override
-    public boolean hasReturnValue() {
-        return !(method.getReturnType().equals(Void.class) || method.getReturnType().equals(void.class));
+    public Class<?> getReturnType() {
+        return method.getReturnType();
     }
 
     @Override
@@ -47,7 +47,7 @@ public abstract class AbstractMethodCall implements MethodCall {
     public List<MethodArgument> getMethodArguments() {
         return IntStream.range(0, method.getParameterCount())
                 .filter(index -> isArgumentEligibleForLogging(method.getParameters()[index]))
-                .mapToObj(index -> MethodArgument.from(method.getParameters()[index], getArguments()[index]))
+                .mapToObj(index -> new MethodArgument(method.getParameters()[index], getArguments()[index]))
                 .collect(Collectors.toList());
     }
 

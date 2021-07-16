@@ -1,17 +1,24 @@
 package by.geranium.core;
 
-import lombok.RequiredArgsConstructor;
-
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author Maxim Tereshchenko
  */
-@RequiredArgsConstructor
-class Logger {
+public class Logger {
 
     private final LoggingStrategyFactory loggingStrategyFactory;
+    private final List<ValueSerializingStrategy> valueSerializingStrategyList;
+
+    public Logger(
+            LoggingStrategyFactory loggingStrategyFactory,
+            List<ValueSerializingStrategy> valueSerializingStrategyList
+    ) {
+        this.loggingStrategyFactory = loggingStrategyFactory;
+        this.valueSerializingStrategyList = new ArrayList<>(valueSerializingStrategyList);
+    }
 
     void logIn(MethodCall methodCall) {
         getStrategy(methodCall).log(() -> getLogInMessage(methodCall));
@@ -42,13 +49,24 @@ class Logger {
                 methodCall.getMethodName(),
                 methodCall.getMethodArguments()
                         .stream()
-                        .map(Objects::toString)
+                        .map(methodArgument -> valueSerializingStrategyList.stream()
+                                .filter(methodArgument::isSupported)
+                                .map(methodArgument::toString)
+                                .findFirst()
+                                .orElseThrow(IllegalArgumentException::new))
                         .collect(Collectors.joining(", "))
         );
     }
 
     private String getLogOutMessage(MethodCall methodCall, Object returnValue) {
-        return String.format("%s < %s", methodCall.getMethodName(), methodCall.hasReturnValue() ? returnValue : "");
+        return String.format(
+                "%s < %s",
+                methodCall.getMethodName(),
+                valueSerializingStrategyList.stream()
+                        .filter(valueSerializer -> valueSerializer.isSupported(methodCall.getReturnType()))
+                        .map(valueSerializer -> valueSerializer.serialize(returnValue))
+                        .findFirst()
+                        .orElseThrow(IllegalArgumentException::new));
     }
 
     private String getLogExceptionMessage(MethodCall methodCall, Throwable throwable) {

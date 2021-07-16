@@ -4,43 +4,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
-import by.geranium.adapter.InvocationHandlerAdapter;
+import by.geranium.TestConfiguration;
 import by.geranium.annotation.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Proxy;
 
 /**
  * @author Maxim Tereshchenko
  */
 class LogAnnotationTest {
 
-    private LoggingStrategyStub testStrategy;
+    private LoggingStrategyStub loggingStrategyStub;
     private TestInterface testObject;
 
     @BeforeEach
     void setUp() {
-        testStrategy = new LoggingStrategyStub();
-        testObject = (TestInterface) Proxy.newProxyInstance(
-                TestClass.class.getClassLoader(),
-                TestClass.class.getInterfaces(),
-                new InvocationHandlerAdapter(
-                        new Advice(
-                                new Logger(
-                                        new LoggingStrategyFactoryStub(testStrategy)
-                                )
-                        ),
-                        new TestClass()
-                )
-        );
+        loggingStrategyStub = new LoggingStrategyStub();
+        testObject = TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                .build();
     }
 
     @Test
     void givenMethodWithArgumentsAndReturnValue_thenLogArgumentAndReturnValue() {
         testObject.methodWithArguments("first", "second");
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodWithArguments > str1 = first, str2 = second",
                         "DEBUG methodWithArguments < return string"
@@ -51,7 +41,7 @@ class LogAnnotationTest {
     void givenMethodWithoutArgumentsAndWithReturnValue_thenLogReturnValue() {
         testObject.methodWithoutArguments();
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodWithoutArguments > ",
                         "DEBUG methodWithoutArguments < return string"
@@ -62,7 +52,7 @@ class LogAnnotationTest {
     void givenMethodWithoutArgumentsAndReturnValue_thenLogMethodName() {
         testObject.methodWithoutArgumentsAndReturnValue();
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodWithoutArgumentsAndReturnValue > ",
                         "DEBUG methodWithoutArgumentsAndReturnValue < "
@@ -73,7 +63,7 @@ class LogAnnotationTest {
     void givenMethodWithNumericPrimitiveArguments_thenLogArguments() {
         testObject.methodWithNumericPrimitiveArguments((byte) 1, (short) 1, 1, 1L);
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodWithNumericPrimitiveArguments > byteArg = 1, shortArg = 1, intArg = 1, " +
                                 "longArg = 1",
@@ -85,7 +75,7 @@ class LogAnnotationTest {
     void givenMethodWithFloatPointPrimitiveArguments_thenLogArguments() {
         testObject.methodWithFloatPointPrimitiveArguments(1.1f, 1.1);
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodWithFloatPointPrimitiveArguments > floatArg = 1.1, doubleArg = 1.1",
                         "DEBUG methodWithFloatPointPrimitiveArguments < "
@@ -96,7 +86,7 @@ class LogAnnotationTest {
     void givenMethodWithOtherPrimitiveArguments_thenLogArguments() {
         testObject.methodWithOtherPrimitiveArguments(false, 'a');
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodWithOtherPrimitiveArguments > booleanArg = false, charArg = a",
                         "DEBUG methodWithOtherPrimitiveArguments < "
@@ -107,10 +97,21 @@ class LogAnnotationTest {
     void givenMethodWithLogInfoAnnotation_thenLogInfoLevel() {
         testObject.methodWithLogInfo();
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "INFO methodWithLogInfo > ",
                         "INFO methodWithLogInfo < "
+                );
+    }
+
+    @Test
+    void givenMethodWithLogOffAnnotation_thenLogOffLevel() {
+        testObject.methodWithLogOff();
+
+        assertThat(loggingStrategyStub.getMessages())
+                .containsExactly(
+                        "OFF methodWithLogOff > ",
+                        "OFF methodWithLogOff < "
                 );
     }
 
@@ -119,7 +120,7 @@ class LogAnnotationTest {
         testObject.overloadedMethod("str11");
         testObject.overloadedMethod(1, "str22");
 
-        assertThat(testStrategy.getMessages())
+        assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG overloadedMethod > str1 = str11",
                         "DEBUG overloadedMethod < ",
@@ -143,6 +144,8 @@ class LogAnnotationTest {
         void methodWithOtherPrimitiveArguments(boolean booleanArg, char charArg);
 
         void methodWithLogInfo();
+
+        void methodWithLogOff();
 
         void overloadedMethod(String str1);
 
@@ -181,6 +184,11 @@ class LogAnnotationTest {
         @Log(LoggingLevel.INFO)
         @Override
         public void methodWithLogInfo() {
+        }
+
+        @Log(LoggingLevel.OFF)
+        @Override
+        public void methodWithLogOff() {
         }
 
         @Override
