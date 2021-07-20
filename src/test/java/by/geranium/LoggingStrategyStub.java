@@ -15,10 +15,6 @@ public class LoggingStrategyStub implements LoggingStrategy {
     private final List<String> messages = new ArrayList<>();
     private LoggingLevel loggingLevel = null;
 
-    public List<String> getMessages() {
-        return messages;
-    }
-
     @Override
     public void log(Supplier<String> messageSupplier) {
         messages.add(String.format("%s %s", loggingLevel, messageSupplier.get()));
@@ -29,7 +25,15 @@ public class LoggingStrategyStub implements LoggingStrategy {
         log(messageSupplier);
     }
 
+    public List<String> getMessages() {
+        return messages;
+    }
+
     public void setLoggingLevel(LoggingLevel loggingLevel) {
         this.loggingLevel = loggingLevel;
+    }
+
+    public void reset() {
+        messages.clear();
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface MethodCall {
 
-    Class<?> getDeclaringClass();
+    Class<?> getTargetClass();
 
     String getMethodName();
 

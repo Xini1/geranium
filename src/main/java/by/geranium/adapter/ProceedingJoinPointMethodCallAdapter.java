@@ -66,7 +66,7 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
     }
 
     @Override
-    public Class<?> getDeclaringClass() {
+    public Class<?> getTargetClass() {
         return proceedingJoinPoint.getTarget().getClass();
     }
 
