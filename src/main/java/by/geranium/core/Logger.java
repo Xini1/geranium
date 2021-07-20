@@ -33,13 +33,13 @@ public class Logger {
     }
 
     private LoggingStrategy getStrategy(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(methodCall.getLoggingLevel(), methodCall.getDeclaringClass());
+        return loggingStrategyFactory.getStrategy(methodCall.getLoggingLevel(), methodCall.getTargetClass());
     }
 
     private LoggingStrategy getStrategyForException(MethodCall methodCall) {
         return loggingStrategyFactory.getStrategy(
                 methodCall.getExceptionLoggingLevel(),
-                methodCall.getDeclaringClass()
+                methodCall.getTargetClass()
         );
     }
 

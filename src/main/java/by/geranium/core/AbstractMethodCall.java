@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -58,14 +60,38 @@ public abstract class AbstractMethodCall implements MethodCall {
     protected abstract Object[] getArguments();
 
     private boolean isArgumentEligibleForLogging(Parameter parameter) {
-        return Optional.ofNullable(parameter.getAnnotation(Log.Exclude.class))
-                .isEmpty();
+        return parameter.getAnnotation(Log.Exclude.class) == null;
     }
 
     private <T extends Annotation> Optional<T> findAnnotation(Class<T> annotationClass) {
-        return Optional.ofNullable(
-                Optional.ofNullable(method.getAnnotation(annotationClass))
-                        .orElseGet(() -> getDeclaringClass().getAnnotation(annotationClass))
-        );
+        return Optional.ofNullable(findAnnotation(getTargetClass(), annotationClass, method));
+    }
+
+    private <T extends Annotation> T findAnnotation(Class<?> type, Class<T> annotationClass, Method... methods) {
+        if (type == Object.class) {
+            return null;
+        }
+
+        return Arrays.stream(methods)
+                .filter(declaredMethod -> declaredMethod.getName().equals(method.getName()))
+                .filter(
+                        declaredMethod -> Arrays.equals(
+                                declaredMethod.getParameterTypes(),
+                                method.getParameterTypes()
+                        )
+                )
+                .map(declaredMethod -> declaredMethod.getAnnotation(annotationClass))
+                .filter(Objects::nonNull)
+                .findAny()
+                .orElseGet(
+                        () -> Optional.ofNullable(type.getAnnotation(annotationClass))
+                                .orElseGet(
+                                        () -> findAnnotation(
+                                                type.getSuperclass(),
+                                                annotationClass,
+                                                type.getSuperclass().getDeclaredMethods()
+                                        )
+                                )
+                );
     }
 }

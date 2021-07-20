@@ -37,7 +37,7 @@ public class ReflectiveMethodCall extends AbstractMethodCall {
     }
 
     @Override
-    public Class<?> getDeclaringClass() {
+    public Class<?> getTargetClass() {
         return object.getClass();
     }
 
