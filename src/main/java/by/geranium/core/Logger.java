@@ -21,29 +21,24 @@ public class Logger {
     }
 
     void logIn(MethodCall methodCall) {
-        getStrategy(methodCall).log(() -> getLogInMessage(methodCall));
+        loggingStrategyFactory.getStrategy(methodCall.inLoggingLevel(), methodCall.targetClass())
+                .log(() -> logInMessage(methodCall));
     }
 
     void logOut(MethodCall methodCall, Object returnValue) {
-        getStrategy(methodCall).log(() -> getLogOutMessage(methodCall, returnValue));
+        loggingStrategyFactory.getStrategy(methodCall.outLoggingLevel(), methodCall.targetClass())
+                .log(() -> logOutMessage(methodCall, returnValue));
     }
 
     void logThrowable(MethodCall methodCall, Throwable throwable) {
-        getStrategyForException(methodCall).log(() -> getLogExceptionMessage(methodCall, throwable), throwable);
-    }
-
-    private LoggingStrategy getStrategy(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(methodCall.inLoggingLevel(), methodCall.targetClass());
-    }
-
-    private LoggingStrategy getStrategyForException(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(
+        loggingStrategyFactory.getStrategy(
                 methodCall.exceptionLoggingLevel(),
                 methodCall.targetClass()
-        );
+        )
+                .log(() -> logExceptionMessage(methodCall, throwable), throwable);
     }
 
-    private String getLogInMessage(MethodCall methodCall) {
+    private String logInMessage(MethodCall methodCall) {
         return String.format(
                 "%s > %s",
                 methodCall.methodName(),
@@ -58,7 +53,7 @@ public class Logger {
         );
     }
 
-    private String getLogOutMessage(MethodCall methodCall, Object returnValue) {
+    private String logOutMessage(MethodCall methodCall, Object returnValue) {
         return String.format(
                 "%s < %s",
                 methodCall.methodName(),
@@ -70,7 +65,7 @@ public class Logger {
         );
     }
 
-    private String getLogExceptionMessage(MethodCall methodCall, Throwable throwable) {
+    private String logExceptionMessage(MethodCall methodCall, Throwable throwable) {
         return String.format("%s ! %s", methodCall.methodName(), throwable.getClass().getName());
     }
 }

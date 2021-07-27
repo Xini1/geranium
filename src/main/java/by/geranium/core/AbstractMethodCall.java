@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 public abstract class AbstractMethodCall implements MethodCall {
 
     private static final Map<Class<? extends Annotation>, Function<? super Annotation, LoggingLevel>>
-            loggingLevelExtractionByAnnotationTypeMap = Map.of(
+            LOGGING_LEVEL_EXTRACTION_BY_ANNOTATION_TYPE_MAP = Map.of(
             Log.class, annotation -> ((Log) annotation).value(),
             Log.In.class, annotation -> ((Log.In) annotation).value(),
             Log.Out.class, annotation -> ((Log.Out) annotation).value(),
@@ -79,7 +79,7 @@ public abstract class AbstractMethodCall implements MethodCall {
     private LoggingLevel findLoggingLevelFromAnnotationsPrioritizing(Class<? extends Annotation>... annotationClasses) {
         return findAnnotationPrioritizing(annotationClasses)
                 .map(
-                        annotation -> loggingLevelExtractionByAnnotationTypeMap.get(annotation.getClass())
+                        annotation -> LOGGING_LEVEL_EXTRACTION_BY_ANNOTATION_TYPE_MAP.get(annotation.annotationType())
                                 .apply(annotation)
                 )
                 .orElse(LoggingLevel.OFF);
