@@ -1,7 +1,7 @@
 package by.geranium.adapter;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -11,13 +11,16 @@ import by.geranium.core.LoggingLevel;
 import by.geranium.core.MethodCall;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Collections;
 
 /**
  * @author Maxim Tereshchenko
@@ -29,85 +32,137 @@ class SpringAspectAdapterTest {
     private Geranium geranium;
     @Autowired
     private TestClass testClass;
+    @Captor
+    private ArgumentCaptor<MethodCall> methodCallArgumentCaptor;
 
     @Test
     void givenMethodWithLogAnnotation_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.methodWithLogAnnotation();
 
-        verify(geranium).logMethodCall(
-                argThat(
-                        methodOfTestClassWithoutArgumentsVoidReturnType(
-                                "methodWithLogAnnotation",
-                                LoggingLevel.INFO,
-                                LoggingLevel.INFO,
-                                LoggingLevel.OFF
-                        )
+        verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
+        assertThat(methodCallArgumentCaptor.getValue())
+                .extracting(
+                        MethodCall::targetClass,
+                        MethodCall::methodArguments,
+                        MethodCall::returnType,
+                        MethodCall::methodName,
+                        MethodCall::inLoggingLevel,
+                        MethodCall::outLoggingLevel,
+                        MethodCall::exceptionLoggingLevel
                 )
-        );
+                .containsExactly(
+                        TestClass.class,
+                        Collections.emptyList(),
+                        void.class,
+                        "methodWithLogAnnotation",
+                        LoggingLevel.INFO,
+                        LoggingLevel.INFO,
+                        LoggingLevel.OFF
+                );
     }
 
     @Test
     void givenMethodWithLogInAnnotation_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.methodWithLogInAnnotation();
 
-        verify(geranium).logMethodCall(
-                argThat(
-                        methodOfTestClassWithoutArgumentsVoidReturnType(
-                                "methodWithLogInAnnotation",
-                                LoggingLevel.INFO,
-                                LoggingLevel.OFF,
-                                LoggingLevel.OFF
-                        )
+        verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
+        assertThat(methodCallArgumentCaptor.getValue())
+                .extracting(
+                        MethodCall::targetClass,
+                        MethodCall::methodArguments,
+                        MethodCall::returnType,
+                        MethodCall::methodName,
+                        MethodCall::inLoggingLevel,
+                        MethodCall::outLoggingLevel,
+                        MethodCall::exceptionLoggingLevel
                 )
-        );
+                .containsExactly(
+                        TestClass.class,
+                        Collections.emptyList(),
+                        void.class,
+                        "methodWithLogInAnnotation",
+                        LoggingLevel.INFO,
+                        LoggingLevel.OFF,
+                        LoggingLevel.OFF
+                );
     }
 
     @Test
     void givenMethodWithLogOutAnnotation_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.methodWithLogOutAnnotation();
 
-        verify(geranium).logMethodCall(
-                argThat(
-                        methodOfTestClassWithoutArgumentsVoidReturnType(
-                                "methodWithLogOutAnnotation",
-                                LoggingLevel.OFF,
-                                LoggingLevel.INFO,
-                                LoggingLevel.OFF
-                        )
+        verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
+        assertThat(methodCallArgumentCaptor.getValue())
+                .extracting(
+                        MethodCall::targetClass,
+                        MethodCall::methodArguments,
+                        MethodCall::returnType,
+                        MethodCall::methodName,
+                        MethodCall::inLoggingLevel,
+                        MethodCall::outLoggingLevel,
+                        MethodCall::exceptionLoggingLevel
                 )
-        );
+                .containsExactly(
+                        TestClass.class,
+                        Collections.emptyList(),
+                        void.class,
+                        "methodWithLogOutAnnotation",
+                        LoggingLevel.OFF,
+                        LoggingLevel.INFO,
+                        LoggingLevel.OFF
+                );
     }
 
     @Test
     void givenMethodWithBothLogInOutAnnotations_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.methodWithBothLogInOutAnnotations();
 
-        verify(geranium).logMethodCall(
-                argThat(
-                        methodOfTestClassWithoutArgumentsVoidReturnType(
-                                "methodWithBothLogInOutAnnotations",
-                                LoggingLevel.WARN,
-                                LoggingLevel.ERROR,
-                                LoggingLevel.OFF
-                        )
+        verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
+        assertThat(methodCallArgumentCaptor.getValue())
+                .extracting(
+                        MethodCall::targetClass,
+                        MethodCall::methodArguments,
+                        MethodCall::returnType,
+                        MethodCall::methodName,
+                        MethodCall::inLoggingLevel,
+                        MethodCall::outLoggingLevel,
+                        MethodCall::exceptionLoggingLevel
                 )
-        );
+                .containsExactly(
+                        TestClass.class,
+                        Collections.emptyList(),
+                        void.class,
+                        "methodWithBothLogInOutAnnotations",
+                        LoggingLevel.WARN,
+                        LoggingLevel.ERROR,
+                        LoggingLevel.OFF
+                );
     }
 
     @Test
     void givenMethodWithBothLogInOutAndPlainLogAnnotations_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.methodWithBothLogInOutAndPlainLogAnnotations();
 
-        verify(geranium).logMethodCall(
-                argThat(
-                        methodOfTestClassWithoutArgumentsVoidReturnType(
-                                "methodWithBothLogInOutAndPlainLogAnnotations",
-                                LoggingLevel.INFO,
-                                LoggingLevel.INFO,
-                                LoggingLevel.OFF
-                        )
+        verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
+        assertThat(methodCallArgumentCaptor.getValue())
+                .extracting(
+                        MethodCall::targetClass,
+                        MethodCall::methodArguments,
+                        MethodCall::returnType,
+                        MethodCall::methodName,
+                        MethodCall::inLoggingLevel,
+                        MethodCall::outLoggingLevel,
+                        MethodCall::exceptionLoggingLevel
                 )
-        );
+                .containsExactly(
+                        TestClass.class,
+                        Collections.emptyList(),
+                        void.class,
+                        "methodWithBothLogInOutAndPlainLogAnnotations",
+                        LoggingLevel.INFO,
+                        LoggingLevel.INFO,
+                        LoggingLevel.OFF
+                );
     }
 
     @Test
@@ -115,16 +170,26 @@ class SpringAspectAdapterTest {
         assertThatThrownBy(() -> testClass.methodWithLogErrorAnnotation())
                 .isInstanceOf(IllegalArgumentException.class);
 
-        verify(geranium).logMethodCall(
-                argThat(
-                        methodOfTestClassWithoutArgumentsVoidReturnType(
-                                "methodWithLogErrorAnnotation",
-                                LoggingLevel.OFF,
-                                LoggingLevel.OFF,
-                                LoggingLevel.INFO
-                        )
+        verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
+        assertThat(methodCallArgumentCaptor.getValue())
+                .extracting(
+                        MethodCall::targetClass,
+                        MethodCall::methodArguments,
+                        MethodCall::returnType,
+                        MethodCall::methodName,
+                        MethodCall::inLoggingLevel,
+                        MethodCall::outLoggingLevel,
+                        MethodCall::exceptionLoggingLevel
                 )
-        );
+                .containsExactly(
+                        TestClass.class,
+                        Collections.emptyList(),
+                        void.class,
+                        "methodWithLogErrorAnnotation",
+                        LoggingLevel.OFF,
+                        LoggingLevel.OFF,
+                        LoggingLevel.INFO
+                );
     }
 
     @Test
@@ -132,21 +197,6 @@ class SpringAspectAdapterTest {
         testClass.methodWithoutAnnotation();
 
         verifyNoInteractions(geranium);
-    }
-
-    private ArgumentMatcher<MethodCall> methodOfTestClassWithoutArgumentsVoidReturnType(
-            String methodName,
-            LoggingLevel inLoggingLevel,
-            LoggingLevel outLoggingLevel,
-            LoggingLevel exceptionLoggingLevel
-    ) {
-        return argument -> argument.targetClass() == TestClass.class &&
-                argument.methodArguments().isEmpty() &&
-                argument.returnType() == void.class &&
-                argument.methodName().equals(methodName) &&
-                argument.inLoggingLevel() == inLoggingLevel &&
-                argument.outLoggingLevel() == outLoggingLevel &&
-                argument.exceptionLoggingLevel() == exceptionLoggingLevel;
     }
 
     static class TestClass {
