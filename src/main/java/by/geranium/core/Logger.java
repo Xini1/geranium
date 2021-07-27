@@ -33,7 +33,7 @@ public class Logger {
     }
 
     private LoggingStrategy getStrategy(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(methodCall.getLoggingLevel(), methodCall.getTargetClass());
+        return loggingStrategyFactory.getStrategy(methodCall.getInLoggingLevel(), methodCall.getTargetClass());
     }
 
     private LoggingStrategy getStrategyForException(MethodCall methodCall) {
@@ -66,7 +66,8 @@ public class Logger {
                         .filter(valueSerializer -> valueSerializer.isSupported(methodCall.getReturnType()))
                         .map(valueSerializer -> valueSerializer.serialize(returnValue))
                         .findFirst()
-                        .orElseThrow(IllegalArgumentException::new));
+                        .orElseThrow(IllegalArgumentException::new)
+        );
     }
 
     private String getLogExceptionMessage(MethodCall methodCall, Throwable throwable) {

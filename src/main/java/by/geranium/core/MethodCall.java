@@ -13,7 +13,9 @@ public interface MethodCall {
 
     Class<?> getReturnType();
 
-    LoggingLevel getLoggingLevel();
+    LoggingLevel getInLoggingLevel();
+
+    LoggingLevel getOutLoggingLevel();
 
     LoggingLevel getExceptionLoggingLevel();
 

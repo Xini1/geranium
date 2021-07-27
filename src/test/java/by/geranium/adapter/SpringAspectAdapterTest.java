@@ -36,7 +36,7 @@ class SpringAspectAdapterTest {
                 argument.getReturnType() == void.class &&
                 argument.getMethodName().equals("annotatedMethod") &&
                 argument.getExceptionLoggingLevel() == LoggingLevel.OFF &&
-                argument.getLoggingLevel() == LoggingLevel.DEBUG));
+                argument.getInLoggingLevel() == LoggingLevel.DEBUG));
     }
 
     @Test

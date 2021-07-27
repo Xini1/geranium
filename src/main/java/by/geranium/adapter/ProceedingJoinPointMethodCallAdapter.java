@@ -44,7 +44,8 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
                                         index -> isArgumentTypeAssignableFromActualType(
                                                 proceedingJoinPoint,
                                                 method,
-                                                index)
+                                                index
+                                        )
                                 )
                         )
                         .findAny()

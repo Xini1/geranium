@@ -1,5 +1,7 @@
 package by.geranium.core;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import by.geranium.GeraniumConfiguration;
 import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
@@ -14,13 +16,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * @author Maxim Tereshchenko
  */
 @ExtendWith(SpringExtension.class)
-public class InheritanceTest {
+class InheritanceTest {
 
     @Autowired
     private LoggingStrategyStub loggingStrategyStub;
