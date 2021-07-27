@@ -65,7 +65,7 @@ class LogErrorAnnotationTest {
             throw new RuntimeException();
         }
 
-        @Log.Error
+        @Log.Error(LoggingLevel.ERROR)
         @Override
         public void methodThrowingRuntimeExceptionWithLogErrorAnnotation() {
             throw new RuntimeException();
