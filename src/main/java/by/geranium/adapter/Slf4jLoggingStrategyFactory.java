@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -45,9 +44,6 @@ public class Slf4jLoggingStrategyFactory implements LoggingStrategyFactory {
     }
 
     private boolean isLoggingLevelDisabled(LoggingLevel loggingLevel, Logger logger) {
-        return Objects.equals(
-                IS_LOGGING_LEVEL_ENABLED_FUNCTION_MAP.get(loggingLevel).apply(logger),
-                Boolean.FALSE
-        );
+        return Boolean.FALSE.equals(IS_LOGGING_LEVEL_ENABLED_FUNCTION_MAP.get(loggingLevel).apply(logger));
     }
 }

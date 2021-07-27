@@ -33,43 +33,43 @@ public abstract class AbstractMethodCall implements MethodCall {
     private final Method method;
 
     @Override
-    public String getMethodName() {
+    public String methodName() {
         return method.getName();
     }
 
     @Override
-    public Class<?> getReturnType() {
+    public Class<?> returnType() {
         return method.getReturnType();
     }
 
     @Override
-    public LoggingLevel getInLoggingLevel() {
+    public LoggingLevel inLoggingLevel() {
         return findLoggingLevelFromAnnotationsPrioritizing(Log.In.class, Log.class);
     }
 
     @Override
-    public LoggingLevel getOutLoggingLevel() {
+    public LoggingLevel outLoggingLevel() {
         return findLoggingLevelFromAnnotationsPrioritizing(Log.Out.class, Log.class);
     }
 
     @Override
-    public LoggingLevel getExceptionLoggingLevel() {
+    public LoggingLevel exceptionLoggingLevel() {
         return findLoggingLevelFromAnnotationsPrioritizing(Log.Error.class);
     }
 
     @Override
-    public List<MethodArgument> getMethodArguments() {
+    public List<MethodArgument> methodArguments() {
         return IntStream.range(0, method.getParameterCount())
                 .filter(index -> isArgumentEligibleForLogging(method.getParameters()[index]))
-                .mapToObj(index -> new MethodArgument(method.getParameters()[index], getArguments()[index]))
+                .mapToObj(index -> new MethodArgument(method.getParameters()[index], arguments()[index]))
                 .collect(Collectors.toList());
     }
 
-    protected Method getInvokedMethod() {
+    protected Method invokedMethod() {
         return method;
     }
 
-    protected abstract Object[] getArguments();
+    protected abstract Object[] arguments();
 
     private boolean isArgumentEligibleForLogging(Parameter parameter) {
         return parameter.getAnnotation(Log.Exclude.class) == null;
@@ -90,7 +90,7 @@ public abstract class AbstractMethodCall implements MethodCall {
             Class<? extends Annotation>... annotationClasses
     ) {
         return Optional.ofNullable(
-                findAnnotationPrioritizing(getTargetClass(), Arrays.asList(annotationClasses), method)
+                findAnnotationPrioritizing(targetClass(), Arrays.asList(annotationClasses), method)
         );
     }
 

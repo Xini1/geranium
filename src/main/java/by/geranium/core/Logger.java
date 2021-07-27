@@ -33,21 +33,21 @@ public class Logger {
     }
 
     private LoggingStrategy getStrategy(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(methodCall.getInLoggingLevel(), methodCall.getTargetClass());
+        return loggingStrategyFactory.getStrategy(methodCall.inLoggingLevel(), methodCall.targetClass());
     }
 
     private LoggingStrategy getStrategyForException(MethodCall methodCall) {
         return loggingStrategyFactory.getStrategy(
-                methodCall.getExceptionLoggingLevel(),
-                methodCall.getTargetClass()
+                methodCall.exceptionLoggingLevel(),
+                methodCall.targetClass()
         );
     }
 
     private String getLogInMessage(MethodCall methodCall) {
         return String.format(
                 "%s > %s",
-                methodCall.getMethodName(),
-                methodCall.getMethodArguments()
+                methodCall.methodName(),
+                methodCall.methodArguments()
                         .stream()
                         .map(methodArgument -> valueSerializingStrategyList.stream()
                                 .filter(methodArgument::isSupported)
@@ -61,9 +61,9 @@ public class Logger {
     private String getLogOutMessage(MethodCall methodCall, Object returnValue) {
         return String.format(
                 "%s < %s",
-                methodCall.getMethodName(),
+                methodCall.methodName(),
                 valueSerializingStrategyList.stream()
-                        .filter(valueSerializer -> valueSerializer.isSupported(methodCall.getReturnType()))
+                        .filter(valueSerializer -> valueSerializer.isSupported(methodCall.returnType()))
                         .map(valueSerializer -> valueSerializer.serialize(returnValue))
                         .findFirst()
                         .orElseThrow(IllegalArgumentException::new)
@@ -71,6 +71,6 @@ public class Logger {
     }
 
     private String getLogExceptionMessage(MethodCall methodCall, Throwable throwable) {
-        return String.format("%s ! %s", methodCall.getMethodName(), throwable.getClass().getName());
+        return String.format("%s ! %s", methodCall.methodName(), throwable.getClass().getName());
     }
 }

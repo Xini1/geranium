@@ -7,19 +7,19 @@ import java.util.List;
  */
 public interface MethodCall {
 
-    Class<?> getTargetClass();
+    Class<?> targetClass();
 
-    String getMethodName();
+    String methodName();
 
-    Class<?> getReturnType();
+    Class<?> returnType();
 
-    LoggingLevel getInLoggingLevel();
+    LoggingLevel inLoggingLevel();
 
-    LoggingLevel getOutLoggingLevel();
+    LoggingLevel outLoggingLevel();
 
-    LoggingLevel getExceptionLoggingLevel();
+    LoggingLevel exceptionLoggingLevel();
 
-    List<MethodArgument> getMethodArguments();
+    List<MethodArgument> methodArguments();
 
     Object proceed() throws Throwable;
 }

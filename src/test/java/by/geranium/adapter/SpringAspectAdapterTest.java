@@ -31,12 +31,12 @@ class SpringAspectAdapterTest {
     void givenAnnotatedMethod_thenCallMethod_thenAdviceInvoked() throws Throwable {
         testClass.annotatedMethod();
 
-        verify(geranium).logMethodCall(argThat(argument -> argument.getTargetClass() == TestClass.class &&
-                argument.getMethodArguments().isEmpty() &&
-                argument.getReturnType() == void.class &&
-                argument.getMethodName().equals("annotatedMethod") &&
-                argument.getExceptionLoggingLevel() == LoggingLevel.OFF &&
-                argument.getInLoggingLevel() == LoggingLevel.DEBUG));
+        verify(geranium).logMethodCall(argThat(argument -> argument.targetClass() == TestClass.class &&
+                argument.methodArguments().isEmpty() &&
+                argument.returnType() == void.class &&
+                argument.methodName().equals("annotatedMethod") &&
+                argument.exceptionLoggingLevel() == LoggingLevel.OFF &&
+                argument.inLoggingLevel() == LoggingLevel.DEBUG));
     }
 
     @Test
