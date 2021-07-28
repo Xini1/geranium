@@ -60,13 +60,13 @@ class LogInOutAnnotationTest {
     }
 
     @Test
-    void givenMethodWithBothLogInOutAndPlainLogAnnotations_thenPlainLogPrioritized() {
-        testObject.methodWithBothLogInOutAnnotations("input string");
+    void givenMethodWithBothLogInOutAndPlainLogAnnotations_thenLogInOutPrioritized() {
+        testObject.methodWithBothLogInOutAndPlainLogAnnotations("input string");
 
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
-                        "WARN methodWithBothLogInOutAnnotations > str = input string",
-                        "ERROR methodWithBothLogInOutAnnotations < return string"
+                        "TRACE methodWithBothLogInOutAndPlainLogAnnotations > str = input string",
+                        "DEBUG methodWithBothLogInOutAndPlainLogAnnotations < return string"
                 );
     }
 
@@ -102,8 +102,8 @@ class LogInOutAnnotationTest {
         }
 
         @Log(LoggingLevel.INFO)
-        @Log.In(LoggingLevel.WARN)
-        @Log.Out(LoggingLevel.ERROR)
+        @Log.In(LoggingLevel.TRACE)
+        @Log.Out(LoggingLevel.DEBUG)
         @Override
         public String methodWithBothLogInOutAndPlainLogAnnotations(String str) {
             return "return string";

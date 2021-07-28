@@ -1,7 +1,6 @@
 package by.geranium.adapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -159,16 +158,15 @@ class SpringAspectAdapterTest {
                         Collections.emptyList(),
                         void.class,
                         "methodWithBothLogInOutAndPlainLogAnnotations",
-                        LoggingLevel.INFO,
-                        LoggingLevel.INFO,
+                        LoggingLevel.WARN,
+                        LoggingLevel.ERROR,
                         LoggingLevel.OFF
                 );
     }
 
     @Test
     void givenMethodWithLogErrorAnnotation_thenCallMethod_thenAdviceInvoked() throws Throwable {
-        assertThatThrownBy(() -> testClass.methodWithLogErrorAnnotation())
-                .isInstanceOf(IllegalArgumentException.class);
+        testClass.methodWithLogErrorAnnotation();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
         assertThat(methodCallArgumentCaptor.getValue())
