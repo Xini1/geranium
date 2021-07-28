@@ -21,33 +21,28 @@ public class Logger {
     }
 
     void logIn(MethodCall methodCall) {
-        getStrategy(methodCall).log(() -> getLogInMessage(methodCall));
+        loggingStrategyFactory.getStrategy(methodCall.inLoggingLevel(), methodCall.targetClass())
+                .log(() -> logInMessage(methodCall));
     }
 
     void logOut(MethodCall methodCall, Object returnValue) {
-        getStrategy(methodCall).log(() -> getLogOutMessage(methodCall, returnValue));
+        loggingStrategyFactory.getStrategy(methodCall.outLoggingLevel(), methodCall.targetClass())
+                .log(() -> logOutMessage(methodCall, returnValue));
     }
 
     void logThrowable(MethodCall methodCall, Throwable throwable) {
-        getStrategyForException(methodCall).log(() -> getLogExceptionMessage(methodCall, throwable), throwable);
+        loggingStrategyFactory.getStrategy(
+                methodCall.exceptionLoggingLevel(),
+                methodCall.targetClass()
+        )
+                .log(() -> logExceptionMessage(methodCall, throwable), throwable);
     }
 
-    private LoggingStrategy getStrategy(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(methodCall.getLoggingLevel(), methodCall.getTargetClass());
-    }
-
-    private LoggingStrategy getStrategyForException(MethodCall methodCall) {
-        return loggingStrategyFactory.getStrategy(
-                methodCall.getExceptionLoggingLevel(),
-                methodCall.getTargetClass()
-        );
-    }
-
-    private String getLogInMessage(MethodCall methodCall) {
+    private String logInMessage(MethodCall methodCall) {
         return String.format(
                 "%s > %s",
-                methodCall.getMethodName(),
-                methodCall.getMethodArguments()
+                methodCall.methodName(),
+                methodCall.methodArguments()
                         .stream()
                         .map(methodArgument -> valueSerializingStrategyList.stream()
                                 .filter(methodArgument::isSupported)
@@ -58,18 +53,19 @@ public class Logger {
         );
     }
 
-    private String getLogOutMessage(MethodCall methodCall, Object returnValue) {
+    private String logOutMessage(MethodCall methodCall, Object returnValue) {
         return String.format(
                 "%s < %s",
-                methodCall.getMethodName(),
+                methodCall.methodName(),
                 valueSerializingStrategyList.stream()
-                        .filter(valueSerializer -> valueSerializer.isSupported(methodCall.getReturnType()))
+                        .filter(valueSerializer -> valueSerializer.isSupported(methodCall.returnType()))
                         .map(valueSerializer -> valueSerializer.serialize(returnValue))
                         .findFirst()
-                        .orElseThrow(IllegalArgumentException::new));
+                        .orElseThrow(IllegalArgumentException::new)
+        );
     }
 
-    private String getLogExceptionMessage(MethodCall methodCall, Throwable throwable) {
-        return String.format("%s ! %s", methodCall.getMethodName(), throwable.getClass().getName());
+    private String logExceptionMessage(MethodCall methodCall, Throwable throwable) {
+        return String.format("%s ! %s", methodCall.methodName(), throwable.getClass().getName());
     }
 }

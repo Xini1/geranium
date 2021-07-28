@@ -37,21 +37,21 @@ public class ReflectiveMethodCall extends AbstractMethodCall {
     }
 
     @Override
-    public Class<?> getTargetClass() {
+    public Class<?> targetClass() {
         return object.getClass();
     }
 
     @Override
     public Object proceed() throws Throwable {
         try {
-            return getInvokedMethod().invoke(object, arguments);
+            return invokedMethod().invoke(object, arguments);
         } catch (InvocationTargetException e) {
             throw e.getCause();
         }
     }
 
     @Override
-    protected Object[] getArguments() {
+    protected Object[] arguments() {
         return arguments;
     }
 }

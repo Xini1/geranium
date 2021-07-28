@@ -44,7 +44,8 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
                                         index -> isArgumentTypeAssignableFromActualType(
                                                 proceedingJoinPoint,
                                                 method,
-                                                index)
+                                                index
+                                        )
                                 )
                         )
                         .findAny()
@@ -66,7 +67,7 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
     }
 
     @Override
-    public Class<?> getTargetClass() {
+    public Class<?> targetClass() {
         return proceedingJoinPoint.getTarget().getClass();
     }
 
@@ -76,7 +77,7 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
     }
 
     @Override
-    protected Object[] getArguments() {
+    protected Object[] arguments() {
         return proceedingJoinPoint.getArgs();
     }
 }
