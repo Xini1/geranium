@@ -25,7 +25,7 @@ class LoggingPatternConfigurationTest {
                 .withLoggingStrategy(loggingStrategyStub)
                 .withInLoggingPattern("${methodName} - start: ${arguments}")
                 .withOutLoggingPattern("${methodName} - end: ${returnValue}")
-                .withExceptionLoggingPattern("${methodName} - error: ${exceptionClass}")
+                .withThrowableLoggingPattern("${methodName} - error: ${exceptionClass}")
                 .build();
     }
 

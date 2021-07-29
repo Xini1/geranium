@@ -21,7 +21,7 @@ public class TestConfiguration<I, T extends I> {
     private LoggingStrategyFactory loggingStrategyFactory;
     private String inLoggingPattern;
     private String outLoggingPattern;
-    private String exceptionLoggingPattern;
+    private String throwableLoggingPattern;
 
     private TestConfiguration(Class<I> interfaceClass, T object) {
         this.interfaceClass = interfaceClass;
@@ -53,14 +53,18 @@ public class TestConfiguration<I, T extends I> {
         return this;
     }
 
-    public TestConfiguration<I, T> withExceptionLoggingPattern(String pattern) {
-        exceptionLoggingPattern = pattern;
+    public TestConfiguration<I, T> withThrowableLoggingPattern(String pattern) {
+        throwableLoggingPattern = pattern;
         return this;
     }
 
     public I build() {
         var geraniumConfiguration = new GeraniumConfiguration()
-                .withLoggingStrategyFactory(loggingStrategyFactory);
+                .withLoggingStrategyFactory(loggingStrategyFactory)
+                .withInLoggingPattern(inLoggingPattern)
+                .withOutLoggingPattern(outLoggingPattern)
+                .withThrowableLoggingPattern(throwableLoggingPattern);
+
         valueSerializerList.forEach(geraniumConfiguration::withValueSerializingStrategy);
         geraniumConfiguration.withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
                 .withValueSerializingStrategy(new ToStringSerializingStrategy());
