@@ -2,6 +2,7 @@ package by.geranium.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -48,33 +49,48 @@ public class Logger {
     }
 
     private String logInMessage(MethodCall methodCall) {
-        return String.format(
-                "%s > %s",
-                methodCall.methodName(),
-                methodCall.methodArguments()
-                        .stream()
-                        .map(methodArgument -> valueSerializingStrategyList.stream()
-                                .filter(methodArgument::isSupported)
-                                .map(methodArgument::toString)
-                                .findFirst()
-                                .orElseThrow(IllegalArgumentException::new))
-                        .collect(Collectors.joining(", "))
+        return inLoggingTemplate.replace(
+                Map.of(
+                        SupportedPlaceholders.METHOD_NAME, methodCall.methodName(),
+                        SupportedPlaceholders.ARGUMENTS, serializedMethodArgumentsString(methodCall)
+                )
         );
+    }
+
+    private String serializedMethodArgumentsString(MethodCall methodCall) {
+        return methodCall.methodArguments()
+                .stream()
+                .map(methodArgument -> valueSerializingStrategyList.stream()
+                        .filter(methodArgument::isSupported)
+                        .map(methodArgument::toString)
+                        .findFirst()
+                        .orElseThrow(IllegalArgumentException::new))
+                .collect(Collectors.joining(", "));
     }
 
     private String logOutMessage(MethodCall methodCall, Object returnValue) {
-        return String.format(
-                "%s < %s",
-                methodCall.methodName(),
-                valueSerializingStrategyList.stream()
-                        .filter(valueSerializer -> valueSerializer.isSupported(methodCall.returnType()))
-                        .map(valueSerializer -> valueSerializer.serialize(returnValue))
-                        .findFirst()
-                        .orElseThrow(IllegalArgumentException::new)
+        return outLoggingTemplate.replace(
+                Map.of(
+                        SupportedPlaceholders.METHOD_NAME, methodCall.methodName(),
+                        SupportedPlaceholders.RETURN_VALUE, serializedReturnValueString(methodCall, returnValue)
+                )
         );
     }
 
+    private String serializedReturnValueString(MethodCall methodCall, Object returnValue) {
+        return valueSerializingStrategyList.stream()
+                .filter(valueSerializer -> valueSerializer.isSupported(methodCall.returnType()))
+                .map(valueSerializer -> valueSerializer.serialize(returnValue))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
     private String logThrowableMessage(MethodCall methodCall, Throwable throwable) {
-        return String.format("%s ! %s", methodCall.methodName(), throwable.getClass().getName());
+        return throwableLoggingTemplate.replace(
+                Map.of(
+                        SupportedPlaceholders.METHOD_NAME, methodCall.methodName(),
+                        SupportedPlaceholders.EXCEPTION_CLASS, throwable.getClass().getName()
+                )
+        );
     }
 }
