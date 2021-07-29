@@ -26,6 +26,7 @@ public enum SupportedPlaceholders {
 
     private String placeholderName() {
         return Arrays.stream(name().split("_"))
+                .map(String::toLowerCase)
                 .map(this::toUpperCaseFirstLetter)
                 .collect(Collectors.collectingAndThen(Collectors.joining(), this::toLowerCaseFirstLetter));
     }
