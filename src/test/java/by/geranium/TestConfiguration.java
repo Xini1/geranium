@@ -30,13 +30,25 @@ public class TestConfiguration<I, T extends I> {
         return new Builder<>(interfaceClass);
     }
 
-    public TestConfiguration<I, T> withLoggingStrategyFactory(LoggingStrategyFactory loggingStrategyFactory) {
-        this.loggingStrategyFactory = loggingStrategyFactory;
+    public TestConfiguration<I, T> withLoggingStrategy(LoggingStrategyStub loggingStrategy) {
+        this.loggingStrategyFactory = new LoggingStrategyFactoryStub(loggingStrategy);
         return this;
     }
 
     public TestConfiguration<I, T> withValueSerializer(ValueSerializingStrategy valueSerializer) {
         valueSerializerList.add(valueSerializer);
+        return this;
+    }
+
+    public TestConfiguration<I, T> withInLoggingPattern(String pattern) {
+        return this;
+    }
+
+    public TestConfiguration<I, T> withOutLoggingPattern(String pattern) {
+        return this;
+    }
+
+    public TestConfiguration<I, T> withExceptionLoggingPattern(String pattern) {
         return this;
     }
 
@@ -57,18 +69,6 @@ public class TestConfiguration<I, T extends I> {
                         )
                 )
         );
-    }
-
-    public TestConfiguration<I, T> withInLoggingPattern(String pattern) {
-        return this;
-    }
-
-    public TestConfiguration<I, T> withOutLoggingPattern(String pattern) {
-        return this;
-    }
-
-    public TestConfiguration<I, T> withExceptionLoggingPattern(String pattern) {
-        return this;
     }
 
     public static class Builder<I> {

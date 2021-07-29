@@ -3,7 +3,6 @@ package by.geranium.core;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
 import by.geranium.TestConfiguration;
 import by.geranium.annotation.Log;
@@ -23,7 +22,7 @@ class LoggingPatternConfigurationTest {
         loggingStrategyStub = new LoggingStrategyStub();
         testObject = TestConfiguration.forInterface(TestInterface.class)
                 .forObject(new TestClass())
-                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                .withLoggingStrategy(loggingStrategyStub)
                 .withInLoggingPattern("${methodName} - start: ${arguments}")
                 .withOutLoggingPattern("${methodName} - end: ${returnValue}")
                 .withExceptionLoggingPattern("${methodName} - error: ${exceptionClass}")

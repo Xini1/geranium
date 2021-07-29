@@ -2,7 +2,6 @@ package by.geranium.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
 import by.geranium.TestConfiguration;
 import by.geranium.annotation.Log;
@@ -22,7 +21,7 @@ class ValueSerializerTest {
         loggingStrategyStub = new LoggingStrategyStub();
         testObject = TestConfiguration.forInterface(TestInterface.class)
                 .forObject(new TestClass())
-                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                .withLoggingStrategy(loggingStrategyStub)
                 .withValueSerializer(new TestIntegerSerializingStrategy())
                 .build();
     }
