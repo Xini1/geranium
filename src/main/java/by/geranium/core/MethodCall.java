@@ -17,7 +17,7 @@ public interface MethodCall {
 
     LoggingLevel outLoggingLevel();
 
-    LoggingLevel exceptionLoggingLevel();
+    LoggingLevel throwableLoggingLevel();
 
     List<MethodArgument> methodArguments();
 

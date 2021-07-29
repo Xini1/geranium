@@ -11,13 +11,22 @@ public class Logger {
 
     private final LoggingStrategyFactory loggingStrategyFactory;
     private final List<ValueSerializingStrategy> valueSerializingStrategyList;
+    private final Template inLoggingTemplate;
+    private final Template outLoggingTemplate;
+    private final Template throwableLoggingTemplate;
 
     public Logger(
             LoggingStrategyFactory loggingStrategyFactory,
-            List<ValueSerializingStrategy> valueSerializingStrategyList
+            List<ValueSerializingStrategy> valueSerializingStrategyList,
+            Template inLoggingTemplate,
+            Template outLoggingTemplate,
+            Template throwableLoggingTemplate
     ) {
         this.loggingStrategyFactory = loggingStrategyFactory;
         this.valueSerializingStrategyList = new ArrayList<>(valueSerializingStrategyList);
+        this.inLoggingTemplate = inLoggingTemplate;
+        this.outLoggingTemplate = outLoggingTemplate;
+        this.throwableLoggingTemplate = throwableLoggingTemplate;
     }
 
     void logIn(MethodCall methodCall) {
@@ -32,10 +41,10 @@ public class Logger {
 
     void logThrowable(MethodCall methodCall, Throwable throwable) {
         loggingStrategyFactory.getStrategy(
-                methodCall.exceptionLoggingLevel(),
-                methodCall.targetClass()
-        )
-                .log(() -> logExceptionMessage(methodCall, throwable), throwable);
+                        methodCall.throwableLoggingLevel(),
+                        methodCall.targetClass()
+                )
+                .log(() -> logThrowableMessage(methodCall, throwable), throwable);
     }
 
     private String logInMessage(MethodCall methodCall) {
@@ -65,7 +74,7 @@ public class Logger {
         );
     }
 
-    private String logExceptionMessage(MethodCall methodCall, Throwable throwable) {
+    private String logThrowableMessage(MethodCall methodCall, Throwable throwable) {
         return String.format("%s ! %s", methodCall.methodName(), throwable.getClass().getName());
     }
 }

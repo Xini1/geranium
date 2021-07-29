@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 public class Slf4jLoggingStrategy implements LoggingStrategy {
 
     private final Consumer<String> loggingConsumer;
-    private final BiConsumer<String, Throwable> exceptionLoggingConsumer;
+    private final BiConsumer<String, Throwable> throwableLoggingConsumer;
 
     public static LoggingStrategy trace(Logger logger) {
         return new Slf4jLoggingStrategy(logger::trace, logger::trace);
@@ -45,6 +45,6 @@ public class Slf4jLoggingStrategy implements LoggingStrategy {
 
     @Override
     public void log(Supplier<String> messageSupplier, Throwable throwable) {
-        exceptionLoggingConsumer.accept(messageSupplier.get(), throwable);
+        throwableLoggingConsumer.accept(messageSupplier.get(), throwable);
     }
 }

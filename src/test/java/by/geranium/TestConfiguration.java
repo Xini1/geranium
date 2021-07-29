@@ -19,6 +19,9 @@ public class TestConfiguration<I, T extends I> {
     private final T object;
     private final List<ValueSerializingStrategy> valueSerializerList;
     private LoggingStrategyFactory loggingStrategyFactory;
+    private String inLoggingPattern;
+    private String outLoggingPattern;
+    private String exceptionLoggingPattern;
 
     private TestConfiguration(Class<I> interfaceClass, T object) {
         this.interfaceClass = interfaceClass;
@@ -41,14 +44,17 @@ public class TestConfiguration<I, T extends I> {
     }
 
     public TestConfiguration<I, T> withInLoggingPattern(String pattern) {
+        inLoggingPattern = pattern;
         return this;
     }
 
     public TestConfiguration<I, T> withOutLoggingPattern(String pattern) {
+        outLoggingPattern = pattern;
         return this;
     }
 
     public TestConfiguration<I, T> withExceptionLoggingPattern(String pattern) {
+        exceptionLoggingPattern = pattern;
         return this;
     }
 
