@@ -59,6 +59,18 @@ public class TestConfiguration<I, T extends I> {
         );
     }
 
+    public TestConfiguration<I, T> withInLoggingPattern(String pattern) {
+        return this;
+    }
+
+    public TestConfiguration<I, T> withOutLoggingPattern(String pattern) {
+        return this;
+    }
+
+    public TestConfiguration<I, T> withExceptionLoggingPattern(String pattern) {
+        return this;
+    }
+
     public static class Builder<I> {
 
         private final Class<I> interfaceClass;
