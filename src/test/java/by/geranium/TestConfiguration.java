@@ -19,9 +19,9 @@ public class TestConfiguration<I, T extends I> {
     private final T object;
     private final List<ValueSerializingStrategy> valueSerializerList;
     private LoggingStrategyFactory loggingStrategyFactory;
-    private String inLoggingPattern;
-    private String outLoggingPattern;
-    private String throwableLoggingPattern;
+    private String inLoggingPattern = "${methodName} > ${arguments}";
+    private String outLoggingPattern = "${methodName} < ${returnValue}";
+    private String throwableLoggingPattern = "${methodName} ! ${exceptionClass}";
 
     private TestConfiguration(Class<I> interfaceClass, T object) {
         this.interfaceClass = interfaceClass;

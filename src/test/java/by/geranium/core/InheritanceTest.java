@@ -94,6 +94,9 @@ class InheritanceTest {
                             .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub()))
                             .withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
                             .withValueSerializingStrategy(new ToStringSerializingStrategy())
+                            .withInLoggingPattern("${methodName} > ${arguments}")
+                            .withOutLoggingPattern("${methodName} < ${returnValue}")
+                            .withThrowableLoggingPattern("${methodName} ! ${exceptionClass}")
                             .build()
             );
         }
