@@ -60,9 +60,9 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
             int index
     ) {
         return PRIMITIVE_TO_BOXED_CLASS_MAP.getOrDefault(
-                method.getParameterTypes()[index],
-                method.getParameterTypes()[index]
-        )
+                        method.getParameterTypes()[index],
+                        method.getParameterTypes()[index]
+                )
                 .isAssignableFrom(proceedingJoinPoint.getArgs()[index].getClass());
     }
 
