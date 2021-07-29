@@ -19,6 +19,9 @@ public class TestConfiguration<I, T extends I> {
     private final T object;
     private final List<ValueSerializingStrategy> valueSerializerList;
     private LoggingStrategyFactory loggingStrategyFactory;
+    private String inLoggingPattern = "${methodName} > ${arguments}";
+    private String outLoggingPattern = "${methodName} < ${returnValue}";
+    private String throwableLoggingPattern = "${methodName} ! ${exceptionClass}";
 
     private TestConfiguration(Class<I> interfaceClass, T object) {
         this.interfaceClass = interfaceClass;
@@ -30,8 +33,8 @@ public class TestConfiguration<I, T extends I> {
         return new Builder<>(interfaceClass);
     }
 
-    public TestConfiguration<I, T> withLoggingStrategyFactory(LoggingStrategyFactory loggingStrategyFactory) {
-        this.loggingStrategyFactory = loggingStrategyFactory;
+    public TestConfiguration<I, T> withLoggingStrategy(LoggingStrategyStub loggingStrategy) {
+        this.loggingStrategyFactory = new LoggingStrategyFactoryStub(loggingStrategy);
         return this;
     }
 
@@ -40,9 +43,28 @@ public class TestConfiguration<I, T extends I> {
         return this;
     }
 
+    public TestConfiguration<I, T> withInLoggingPattern(String pattern) {
+        inLoggingPattern = pattern;
+        return this;
+    }
+
+    public TestConfiguration<I, T> withOutLoggingPattern(String pattern) {
+        outLoggingPattern = pattern;
+        return this;
+    }
+
+    public TestConfiguration<I, T> withThrowableLoggingPattern(String pattern) {
+        throwableLoggingPattern = pattern;
+        return this;
+    }
+
     public I build() {
         var geraniumConfiguration = new GeraniumConfiguration()
-                .withLoggingStrategyFactory(loggingStrategyFactory);
+                .withLoggingStrategyFactory(loggingStrategyFactory)
+                .withInLoggingPattern(inLoggingPattern)
+                .withOutLoggingPattern(outLoggingPattern)
+                .withThrowableLoggingPattern(throwableLoggingPattern);
+
         valueSerializerList.forEach(geraniumConfiguration::withValueSerializingStrategy);
         geraniumConfiguration.withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
                 .withValueSerializingStrategy(new ToStringSerializingStrategy());

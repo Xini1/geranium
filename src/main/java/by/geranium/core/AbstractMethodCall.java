@@ -53,7 +53,7 @@ public abstract class AbstractMethodCall implements MethodCall {
     }
 
     @Override
-    public LoggingLevel exceptionLoggingLevel() {
+    public LoggingLevel throwableLoggingLevel() {
         return findLoggingLevelFromAnnotationsPrioritizing(Log.Error.class);
     }
 

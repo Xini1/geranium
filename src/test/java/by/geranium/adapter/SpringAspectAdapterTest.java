@@ -47,7 +47,7 @@ class SpringAspectAdapterTest {
                         MethodCall::methodName,
                         MethodCall::inLoggingLevel,
                         MethodCall::outLoggingLevel,
-                        MethodCall::exceptionLoggingLevel
+                        MethodCall::throwableLoggingLevel
                 )
                 .containsExactly(
                         TestClass.class,
@@ -73,7 +73,7 @@ class SpringAspectAdapterTest {
                         MethodCall::methodName,
                         MethodCall::inLoggingLevel,
                         MethodCall::outLoggingLevel,
-                        MethodCall::exceptionLoggingLevel
+                        MethodCall::throwableLoggingLevel
                 )
                 .containsExactly(
                         TestClass.class,
@@ -99,7 +99,7 @@ class SpringAspectAdapterTest {
                         MethodCall::methodName,
                         MethodCall::inLoggingLevel,
                         MethodCall::outLoggingLevel,
-                        MethodCall::exceptionLoggingLevel
+                        MethodCall::throwableLoggingLevel
                 )
                 .containsExactly(
                         TestClass.class,
@@ -125,7 +125,7 @@ class SpringAspectAdapterTest {
                         MethodCall::methodName,
                         MethodCall::inLoggingLevel,
                         MethodCall::outLoggingLevel,
-                        MethodCall::exceptionLoggingLevel
+                        MethodCall::throwableLoggingLevel
                 )
                 .containsExactly(
                         TestClass.class,
@@ -151,7 +151,7 @@ class SpringAspectAdapterTest {
                         MethodCall::methodName,
                         MethodCall::inLoggingLevel,
                         MethodCall::outLoggingLevel,
-                        MethodCall::exceptionLoggingLevel
+                        MethodCall::throwableLoggingLevel
                 )
                 .containsExactly(
                         TestClass.class,
@@ -177,7 +177,7 @@ class SpringAspectAdapterTest {
                         MethodCall::methodName,
                         MethodCall::inLoggingLevel,
                         MethodCall::outLoggingLevel,
-                        MethodCall::exceptionLoggingLevel
+                        MethodCall::throwableLoggingLevel
                 )
                 .containsExactly(
                         TestClass.class,
