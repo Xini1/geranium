@@ -3,6 +3,7 @@ package by.geranium.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +46,12 @@ public class Logger {
                         methodCall.throwableLoggingLevel(),
                         methodCall.targetClass()
                 )
-                .log(() -> logThrowableMessage(methodCall, throwable), throwable);
+                .log(
+                        () -> logThrowableMessage(methodCall, throwable),
+                        Optional.ofNullable(throwable)
+                                .filter(unused -> methodCall.isExceptionIncluded())
+                                .orElse(null)
+                );
     }
 
     private String logInMessage(MethodCall methodCall) {
@@ -90,7 +96,7 @@ public class Logger {
                 Map.of(
                         SupportedPlaceholders.METHOD_NAME, methodCall.methodName(),
                         SupportedPlaceholders.THROWABLE_CLASS, throwable.getClass().getName(),
-                        SupportedPlaceholders.THROWABLE_MESSAGE,throwable.getMessage()
+                        SupportedPlaceholders.THROWABLE_MESSAGE, throwable.getMessage()
                 )
         );
     }
