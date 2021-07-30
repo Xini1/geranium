@@ -19,7 +19,7 @@ public interface MethodCall {
 
     LoggingLevel throwableLoggingLevel();
 
-    boolean isExceptionIncluded();
+    boolean isThrowableIncluded();
 
     List<MethodArgument> methodArguments();
 

@@ -49,7 +49,7 @@ public class Logger {
                 .log(
                         () -> logThrowableMessage(methodCall, throwable),
                         Optional.ofNullable(throwable)
-                                .filter(unused -> methodCall.isExceptionIncluded())
+                                .filter(unused -> methodCall.isThrowableIncluded())
                                 .orElse(null)
                 );
     }

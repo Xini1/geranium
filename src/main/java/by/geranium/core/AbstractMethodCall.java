@@ -58,7 +58,7 @@ public abstract class AbstractMethodCall implements MethodCall {
     }
 
     @Override
-    public boolean isExceptionIncluded() {
+    public boolean isThrowableIncluded() {
         return findAnnotationPrioritizing(Log.Error.class)
                 .filter(annotation -> annotation.annotationType() == Log.Error.class)
                 .map(Log.Error.class::cast)
