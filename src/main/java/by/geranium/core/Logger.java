@@ -89,7 +89,8 @@ public class Logger {
         return throwableLoggingTemplate.replace(
                 Map.of(
                         SupportedPlaceholders.METHOD_NAME, methodCall.methodName(),
-                        SupportedPlaceholders.EXCEPTION_CLASS, throwable.getClass().getName()
+                        SupportedPlaceholders.THROWABLE_CLASS, throwable.getClass().getName(),
+                        SupportedPlaceholders.THROWABLE_MESSAGE,throwable.getMessage()
                 )
         );
     }

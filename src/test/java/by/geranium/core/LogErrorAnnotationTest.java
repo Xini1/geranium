@@ -32,7 +32,7 @@ class LogErrorAnnotationTest {
 
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
-                        "DEBUG methodThrowingRuntimeException > ",
+                        "OFF methodThrowingRuntimeException > ",
                         "OFF methodThrowingRuntimeException ! java.lang.RuntimeException message"
                 );
     }
@@ -44,7 +44,7 @@ class LogErrorAnnotationTest {
 
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
-                        "DEBUG methodThrowingRuntimeExceptionWithLogErrorAnnotation > ",
+                        "OFF methodThrowingRuntimeExceptionWithLogErrorAnnotation > ",
                         "ERROR methodThrowingRuntimeExceptionWithLogErrorAnnotation ! " +
                                 "java.lang.RuntimeException message"
                 );
@@ -57,8 +57,8 @@ class LogErrorAnnotationTest {
 
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
-                        "DEBUG methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded > ",
-                        "ERROR methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded ! " +
+                        "OFF methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded > ",
+                        "WARN methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded ! " +
                                 "java.lang.IllegalArgumentException message stacktrace"
                 );
     }
@@ -72,7 +72,6 @@ class LogErrorAnnotationTest {
         void methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded();
     }
 
-    @Log
     public static class TestClass implements TestInterface {
 
         @Override

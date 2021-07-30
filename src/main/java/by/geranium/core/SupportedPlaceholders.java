@@ -15,7 +15,8 @@ public enum SupportedPlaceholders {
     METHOD_NAME,
     ARGUMENTS,
     RETURN_VALUE,
-    EXCEPTION_CLASS;
+    THROWABLE_CLASS,
+    THROWABLE_MESSAGE;
 
     private static final String PLACEHOLDER_PREFIX = "${";
     private static final String PLACEHOLDER_SUFFIX = "}";
