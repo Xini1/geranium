@@ -5,6 +5,7 @@ import by.geranium.core.LoggingStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -22,7 +23,12 @@ public class LoggingStrategyStub implements LoggingStrategy {
 
     @Override
     public void log(Supplier<String> messageSupplier, Throwable throwable) {
-        log(messageSupplier);
+        log(
+                () -> messageSupplier.get() +
+                        Optional.ofNullable(throwable)
+                                .map(unused -> " stacktrace")
+                                .orElse("")
+        );
     }
 
     public List<String> getMessages() {

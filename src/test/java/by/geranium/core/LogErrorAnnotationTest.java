@@ -33,7 +33,7 @@ class LogErrorAnnotationTest {
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodThrowingRuntimeException > ",
-                        "OFF methodThrowingRuntimeException ! java.lang.RuntimeException"
+                        "OFF methodThrowingRuntimeException ! java.lang.RuntimeException message"
                 );
     }
 
@@ -45,7 +45,21 @@ class LogErrorAnnotationTest {
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG methodThrowingRuntimeExceptionWithLogErrorAnnotation > ",
-                        "ERROR methodThrowingRuntimeExceptionWithLogErrorAnnotation ! java.lang.RuntimeException"
+                        "ERROR methodThrowingRuntimeExceptionWithLogErrorAnnotation ! " +
+                                "java.lang.RuntimeException message"
+                );
+    }
+
+    @Test
+    void givenMethodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded_thenLogExceptionAndStacktrace() {
+        assertThatThrownBy(() -> testObject.methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded())
+                .isInstanceOf(IllegalArgumentException.class);
+
+        assertThat(loggingStrategyStub.getMessages())
+                .containsExactly(
+                        "DEBUG methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded > ",
+                        "ERROR methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded ! " +
+                                "java.lang.IllegalArgumentException message stacktrace"
                 );
     }
 
@@ -54,6 +68,8 @@ class LogErrorAnnotationTest {
         void methodThrowingRuntimeException();
 
         void methodThrowingRuntimeExceptionWithLogErrorAnnotation();
+
+        void methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded();
     }
 
     @Log
@@ -61,13 +77,19 @@ class LogErrorAnnotationTest {
 
         @Override
         public void methodThrowingRuntimeException() {
-            throw new RuntimeException();
+            throw new RuntimeException("message");
         }
 
         @Log.Error(LoggingLevel.ERROR)
         @Override
         public void methodThrowingRuntimeExceptionWithLogErrorAnnotation() {
-            throw new RuntimeException();
+            throw new RuntimeException("message");
+        }
+
+        @Log.Error(value = LoggingLevel.WARN, isThrowableIncluded = true)
+        @Override
+        public void methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded() {
+            throw new IllegalArgumentException("message");
         }
     }
 }
