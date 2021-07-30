@@ -31,7 +31,11 @@ public class ReflectiveMethodCall extends AbstractMethodCall {
                                 interfaceMethod.getParameterTypes()
                         ))
                         .findAny()
-                        .orElseThrow(IllegalArgumentException::new),
+                        .orElseThrow(
+                                () -> new IllegalArgumentException(
+                                        "Could not find overridden method " + interfaceMethod
+                                )
+                        ),
                 arguments
         );
     }
