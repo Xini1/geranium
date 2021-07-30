@@ -21,7 +21,7 @@ public class TestConfiguration<I, T extends I> {
     private LoggingStrategyFactory loggingStrategyFactory;
     private String inLoggingPattern = "${methodName} > ${arguments}";
     private String outLoggingPattern = "${methodName} < ${returnValue}";
-    private String throwableLoggingPattern = "${methodName} ! ${exceptionClass}";
+    private String throwableLoggingPattern = "${methodName} ! ${throwableClass} ${throwableMessage}";
 
     private TestConfiguration(Class<I> interfaceClass, T object) {
         this.interfaceClass = interfaceClass;

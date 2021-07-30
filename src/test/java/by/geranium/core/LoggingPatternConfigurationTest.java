@@ -25,7 +25,7 @@ class LoggingPatternConfigurationTest {
                 .withLoggingStrategy(loggingStrategyStub)
                 .withInLoggingPattern("${methodName} - start: ${arguments}")
                 .withOutLoggingPattern("${methodName} - end: ${returnValue}")
-                .withThrowableLoggingPattern("${methodName} - error: ${exceptionClass}")
+                .withThrowableLoggingPattern("${methodName} - error: ${throwableClass} ${throwableMessage}")
                 .build();
     }
 
@@ -47,7 +47,7 @@ class LoggingPatternConfigurationTest {
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "INFO methodThrowingException - start: first = 1, second = 2",
-                        "WARN methodThrowingException - error: java.lang.IllegalArgumentException"
+                        "WARN methodThrowingException - error: java.lang.IllegalArgumentException message"
                 );
     }
 
@@ -70,7 +70,7 @@ class LoggingPatternConfigurationTest {
         @Log.Error(LoggingLevel.WARN)
         @Override
         public int methodThrowingException(int first, int second) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("message");
         }
     }
 }

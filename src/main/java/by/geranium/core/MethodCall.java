@@ -19,6 +19,8 @@ public interface MethodCall {
 
     LoggingLevel throwableLoggingLevel();
 
+    boolean isThrowableIncluded();
+
     List<MethodArgument> methodArguments();
 
     Object proceed() throws Throwable;

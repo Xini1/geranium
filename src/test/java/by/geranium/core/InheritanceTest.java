@@ -96,7 +96,6 @@ class InheritanceTest {
                             .withValueSerializingStrategy(new ToStringSerializingStrategy())
                             .withInLoggingPattern("${methodName} > ${arguments}")
                             .withOutLoggingPattern("${methodName} < ${returnValue}")
-                            .withThrowableLoggingPattern("${methodName} ! ${exceptionClass}")
                             .build()
             );
         }
