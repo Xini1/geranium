@@ -40,5 +40,7 @@ public @interface Log {
     @interface Error {
 
         LoggingLevel value() default LoggingLevel.ERROR;
+
+        boolean isThrowableIncluded() default false;
     }
 }
