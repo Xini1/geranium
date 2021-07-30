@@ -51,14 +51,14 @@ class LogErrorAnnotationTest {
     }
 
     @Test
-    void givenMethodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded_thenLogExceptionAndStacktrace() {
+    void givenMethodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded_thenLogExceptionAndStacktrace() {
         assertThatThrownBy(() -> testObject.methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded())
                 .isInstanceOf(IllegalArgumentException.class);
 
         assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
-                        "OFF methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded > ",
-                        "WARN methodThrowingIllegalArgumentExceptionWithLogErrorExceptionIncluded ! " +
+                        "OFF methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded > ",
+                        "WARN methodThrowingIllegalArgumentExceptionWithLogErrorThrowableIncluded ! " +
                                 "java.lang.IllegalArgumentException message stacktrace"
                 );
     }

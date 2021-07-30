@@ -58,6 +58,15 @@ public abstract class AbstractMethodCall implements MethodCall {
     }
 
     @Override
+    public boolean isExceptionIncluded() {
+        return findAnnotationPrioritizing(Log.Error.class)
+                .filter(annotation -> annotation.annotationType() == Log.Error.class)
+                .map(Log.Error.class::cast)
+                .map(Log.Error::isThrowableIncluded)
+                .orElse(Boolean.FALSE);
+    }
+
+    @Override
     public List<MethodArgument> methodArguments() {
         return IntStream.range(0, method.getParameterCount())
                 .filter(index -> isArgumentEligibleForLogging(method.getParameters()[index]))
