@@ -6,7 +6,6 @@ import by.geranium.GeraniumConfiguration;
 import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
 import by.geranium.adapter.ReflectiveMethodCall;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,37 +13,67 @@ import org.junit.jupiter.api.Test;
  */
 class NegativePathTest {
 
-    private Geranium geranium;
+    @Test
+    void givenValueSerializingStrategyListIsEmpty_whenLogIn_thenIllegalArgumentException()
+            throws NoSuchMethodException {
 
-    @BeforeEach
-    void setUp() {
-        geranium = new GeraniumConfiguration()
+        Geranium geranium = new GeraniumConfiguration()
                 .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
                 .withInLoggingPattern("")
                 .build();
-    }
 
-    @Test
-    void givenValueSerializingStrategyListIsEmpty_whenLogIn_thenIllegalArgumentException() {
         MethodCall methodCall = ReflectiveMethodCall.from(
                 new TestClass(),
-                TestInterface.class.getMethods()[0],
+                TestInterface.class.getDeclaredMethod("methodWithArgument", String.class),
                 new Object[]{"input"}
         );
 
         assertThatThrownBy(() -> geranium.logMethodCall(methodCall)).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Could not find any suitable value serializer for argument: str");
+                .hasMessage("Could not find any suitable value serializing strategy for argument str");
+    }
+
+    @Test
+    void givenValueSerializingStrategyListIsNotContainSuitableSerializer_whenLogIn_thenIllegalArgumentException()
+            throws NoSuchMethodException {
+
+        Geranium geranium = new GeraniumConfiguration()
+                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
+                .withInLoggingPattern("")
+                .withValueSerializingStrategy(new NothingSupportedValueSerializingStrategy())
+                .build();
+
+        MethodCall methodCall = ReflectiveMethodCall.from(
+                new TestClass(),
+                TestInterface.class.getDeclaredMethod("methodWithArgument", String.class),
+                new Object[]{"input"}
+        );
+
+        assertThatThrownBy(() -> geranium.logMethodCall(methodCall)).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Could not find any suitable value serializing strategy for argument str");
     }
 
     private interface TestInterface {
 
-        void methodToLog(String str);
+        void methodWithArgument(String str);
     }
 
     public static class TestClass implements TestInterface {
 
         @Override
-        public void methodToLog(String str) {
+        public void methodWithArgument(String str) {
+        }
+    }
+
+    private static class NothingSupportedValueSerializingStrategy implements ValueSerializingStrategy {
+
+        @Override
+        public boolean isSupported(Class<?> type) {
+            return false;
+        }
+
+        @Override
+        public String serialize(Object object) {
+            return null;
         }
     }
 }
