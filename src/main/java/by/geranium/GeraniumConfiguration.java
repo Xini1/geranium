@@ -50,6 +50,10 @@ public class GeraniumConfiguration {
             throw new IllegalArgumentException("Logging strategy factory should not be null");
         }
 
+        if (valueSerializingStrategyList.isEmpty()) {
+            throw new IllegalArgumentException("At least one value serializing strategy should be specified");
+        }
+
         return new Geranium(
                 new Logger(
                         loggingStrategyFactory,
