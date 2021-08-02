@@ -1,6 +1,5 @@
 package by.geranium.adapter;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class ReflectiveMethodCallNegativeTest {
         Object[] arguments = new Object[0];
         TestClass testClass = new TestClass();
 
-        assertThatThrownBy(()->ReflectiveMethodCall.from(testClass,interfaceMethod, arguments))
+        assertThatThrownBy(() -> ReflectiveMethodCall.from(testClass, interfaceMethod, arguments))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Could not find overridden method public abstract void " +
                         "by.geranium.adapter.ReflectiveMethodCallNegativeTest$TestInterface.interfaceMethod()");
