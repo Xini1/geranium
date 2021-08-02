@@ -2,11 +2,12 @@ package by.geranium.core;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import by.geranium.GeraniumConfiguration;
 import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
 import by.geranium.adapter.ReflectiveMethodCall;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
 
 /**
  * @author Maxim Tereshchenko
@@ -17,10 +18,15 @@ class NegativePathTest {
     void givenValueSerializingStrategyListIsEmpty_whenLogIn_thenIllegalArgumentException()
             throws NoSuchMethodException {
 
-        Geranium geranium = new GeraniumConfiguration()
-                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
-                .withInLoggingPattern("")
-                .build();
+        Geranium geranium = new Geranium(
+                new Logger(
+                        new LoggingStrategyFactoryStub(new LoggingStrategyStub()),
+                        Collections.emptyList(),
+                        Template.from(""),
+                        Template.from(""),
+                        null
+                )
+        );
 
         MethodCall methodCall = ReflectiveMethodCall.from(
                 new TestClass(),
@@ -36,11 +42,15 @@ class NegativePathTest {
     void givenValueSerializingStrategyListIsNotContainSuitableSerializer_whenLogIn_thenIllegalArgumentException()
             throws NoSuchMethodException {
 
-        Geranium geranium = new GeraniumConfiguration()
-                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
-                .withInLoggingPattern("")
-                .withValueSerializingStrategy(new NothingSupportedValueSerializingStrategy())
-                .build();
+        Geranium geranium = new Geranium(
+                new Logger(
+                        new LoggingStrategyFactoryStub(new LoggingStrategyStub()),
+                        Collections.singletonList(new NothingSupportedValueSerializingStrategy()),
+                        Template.from(""),
+                        Template.from(""),
+                        null
+                )
+        );
 
         MethodCall methodCall = ReflectiveMethodCall.from(
                 new TestClass(),
@@ -56,10 +66,15 @@ class NegativePathTest {
     void givenValueSerializingStrategyListIsEmpty_whenLogOut_thenIllegalArgumentException()
             throws NoSuchMethodException {
 
-        Geranium geranium = new GeraniumConfiguration()
-                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
-                .withInLoggingPattern("")
-                .build();
+        Geranium geranium = new Geranium(
+                new Logger(
+                        new LoggingStrategyFactoryStub(new LoggingStrategyStub()),
+                        Collections.emptyList(),
+                        Template.from(""),
+                        Template.from(""),
+                        null
+                )
+        );
 
         MethodCall methodCall = ReflectiveMethodCall.from(
                 new TestClass(),
@@ -76,11 +91,15 @@ class NegativePathTest {
     void givenValueSerializingStrategyListIsNotContainSuitableSerializer_whenLogOut_thenIllegalArgumentException()
             throws NoSuchMethodException {
 
-        Geranium geranium = new GeraniumConfiguration()
-                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
-                .withInLoggingPattern("")
-                .withValueSerializingStrategy(new NothingSupportedValueSerializingStrategy())
-                .build();
+        Geranium geranium = new Geranium(
+                new Logger(
+                        new LoggingStrategyFactoryStub(new LoggingStrategyStub()),
+                        Collections.singletonList(new NothingSupportedValueSerializingStrategy()),
+                        Template.from(""),
+                        Template.from(""),
+                        null
+                )
+        );
 
         MethodCall methodCall = ReflectiveMethodCall.from(
                 new TestClass(),
