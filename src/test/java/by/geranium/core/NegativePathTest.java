@@ -72,6 +72,27 @@ class NegativePathTest {
                         "by.geranium.core.NegativePathTest$TestClass.methodWithReturnValue");
     }
 
+    @Test
+    void givenValueSerializingStrategyListIsNotContainSuitableSerializer_whenLogOut_thenIllegalArgumentException()
+            throws NoSuchMethodException {
+
+        Geranium geranium = new GeraniumConfiguration()
+                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()))
+                .withInLoggingPattern("")
+                .withValueSerializingStrategy(new NothingSupportedValueSerializingStrategy())
+                .build();
+
+        MethodCall methodCall = ReflectiveMethodCall.from(
+                new TestClass(),
+                TestInterface.class.getDeclaredMethod("methodWithReturnValue"),
+                new Object[0]
+        );
+
+        assertThatThrownBy(() -> geranium.logMethodCall(methodCall)).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Could not find any suitable value serializing strategy for return value of " +
+                        "by.geranium.core.NegativePathTest$TestClass.methodWithReturnValue");
+    }
+
     private interface TestInterface {
 
         void methodWithArgument(String str);
