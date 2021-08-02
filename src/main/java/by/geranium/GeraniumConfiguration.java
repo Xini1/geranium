@@ -16,9 +16,9 @@ public class GeraniumConfiguration {
 
     private final List<ValueSerializingStrategy> valueSerializingStrategyList = new ArrayList<>();
     private LoggingStrategyFactory loggingStrategyFactory;
-    private Template inLoggingTemplate;
-    private Template outLoggingTemplate;
-    private Template throwableLoggingTemplate;
+    private String inLoggingPattern;
+    private String outLoggingPattern;
+    private String throwableLoggingPattern;
 
     public GeraniumConfiguration withLoggingStrategyFactory(LoggingStrategyFactory loggingStrategyFactory) {
         this.loggingStrategyFactory = loggingStrategyFactory;
@@ -31,17 +31,17 @@ public class GeraniumConfiguration {
     }
 
     public GeraniumConfiguration withInLoggingPattern(String pattern) {
-        inLoggingTemplate = new Template(pattern);
+        inLoggingPattern = pattern;
         return this;
     }
 
     public GeraniumConfiguration withOutLoggingPattern(String pattern) {
-        outLoggingTemplate = new Template(pattern);
+        outLoggingPattern = pattern;
         return this;
     }
 
     public GeraniumConfiguration withThrowableLoggingPattern(String pattern) {
-        throwableLoggingTemplate = new Template(pattern);
+        throwableLoggingPattern = pattern;
         return this;
     }
 
@@ -50,7 +50,9 @@ public class GeraniumConfiguration {
                 new Logger(
                         loggingStrategyFactory,
                         valueSerializingStrategyList,
-                        inLoggingTemplate, outLoggingTemplate, throwableLoggingTemplate
+                        Template.from(inLoggingPattern),
+                        Template.from(outLoggingPattern),
+                        Template.from(throwableLoggingPattern)
                 )
         );
     }

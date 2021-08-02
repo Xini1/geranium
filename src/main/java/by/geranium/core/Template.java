@@ -10,13 +10,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class Template {
 
-    private final String original;
+    private final String pattern;
+
+    public static Template from(String pattern) {
+        if (pattern == null) {
+            throw new IllegalArgumentException("Logging pattern should not be null");
+        }
+
+        return new Template(pattern);
+    }
 
     public String replace(Map<SupportedPlaceholders, String> placeholderMap) {
         return placeholderMap.entrySet()
                 .stream()
                 .reduce(
-                        original,
+                        pattern,
                         (accumulated, entry) -> accumulated.replace(entry.getKey().placeholder(), entry.getValue()),
                         (first, second) -> first //parallel streams are not supported
                 );
