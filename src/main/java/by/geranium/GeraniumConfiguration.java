@@ -46,6 +46,10 @@ public class GeraniumConfiguration {
     }
 
     public Geranium build() {
+        if (loggingStrategyFactory == null) {
+            throw new IllegalArgumentException("Logging strategy factory should not be null");
+        }
+
         return new Geranium(
                 new Logger(
                         loggingStrategyFactory,
