@@ -66,11 +66,18 @@ public class Logger {
     private String serializedMethodArgumentsString(MethodCall methodCall) {
         return methodCall.methodArguments()
                 .stream()
-                .map(methodArgument -> valueSerializingStrategyList.stream()
-                        .filter(methodArgument::isSupported)
-                        .map(methodArgument::toString)
-                        .findFirst()
-                        .orElseThrow(IllegalArgumentException::new))
+                .map(
+                        methodArgument -> valueSerializingStrategyList.stream()
+                                .filter(methodArgument::isSupported)
+                                .map(methodArgument::toString)
+                                .findFirst()
+                                .orElseThrow(
+                                        () -> new IllegalArgumentException(
+                                                "Could not find any suitable value serializing strategy for argument " +
+                                                        methodArgument.name()
+                                        )
+                                )
+                )
                 .collect(Collectors.joining(", "));
     }
 
@@ -88,7 +95,16 @@ public class Logger {
                 .filter(valueSerializer -> valueSerializer.isSupported(methodCall.returnType()))
                 .map(valueSerializer -> valueSerializer.serialize(returnValue))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(
+                        () -> new IllegalArgumentException(
+                                String.format(
+                                        "Could not find any suitable value serializing strategy for return value " +
+                                                "of %s.%s",
+                                        methodCall.targetClass().getName(),
+                                        methodCall.methodName()
+                                )
+                        )
+                );
     }
 
     private String logThrowableMessage(MethodCall methodCall, Throwable throwable) {

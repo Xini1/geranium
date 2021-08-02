@@ -49,7 +49,15 @@ public class ProceedingJoinPointMethodCallAdapter extends AbstractMethodCall {
                                 )
                         )
                         .findAny()
-                        .orElseThrow(IllegalArgumentException::new),
+                        .orElseThrow(
+                                () -> new IllegalArgumentException(
+                                        String.format(
+                                                "Could not find %s in %s",
+                                                proceedingJoinPoint.getSignature().getName(),
+                                                proceedingJoinPoint.getSignature().getDeclaringType().getName()
+                                        )
+                                )
+                        ),
                 proceedingJoinPoint
         );
     }
