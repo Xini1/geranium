@@ -28,4 +28,13 @@ class GeraniumConfigurationNegativeTest {
         assertThatThrownBy(geraniumConfiguration::build).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Logging strategy factory should not be null");
     }
+
+    @Test
+    void givenValueSerializingStrategyListIsEmpty_whenGeraniumBuild_thenIllegalArgumentException() {
+        var geraniumConfiguration = new GeraniumConfiguration()
+                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(new LoggingStrategyStub()));
+
+        assertThatThrownBy(geraniumConfiguration::build).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("At least one value serializing strategy should be specified");
+    }
 }
