@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Maxim Tereshchenko
  */
-class ValueSerializerTest {
+class ValueSerializingStrategyTest {
 
     private LoggingStrategyStub loggingStrategyStub;
     private TestInterface testObject;
