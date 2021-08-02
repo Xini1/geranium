@@ -66,11 +66,18 @@ public class Logger {
     private String serializedMethodArgumentsString(MethodCall methodCall) {
         return methodCall.methodArguments()
                 .stream()
-                .map(methodArgument -> valueSerializingStrategyList.stream()
-                        .filter(methodArgument::isSupported)
-                        .map(methodArgument::toString)
-                        .findFirst()
-                        .orElseThrow(IllegalArgumentException::new))
+                .map(
+                        methodArgument -> valueSerializingStrategyList.stream()
+                                .filter(methodArgument::isSupported)
+                                .map(methodArgument::toString)
+                                .findFirst()
+                                .orElseThrow(
+                                        () -> new IllegalArgumentException(
+                                                "Could not find any suitable value serializer for argument: " +
+                                                        methodArgument.name()
+                                        )
+                                )
+                )
                 .collect(Collectors.joining(", "));
     }
 

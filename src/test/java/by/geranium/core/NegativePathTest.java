@@ -28,7 +28,7 @@ class NegativePathTest {
     void givenValueSerializingStrategyListIsEmpty_whenLogIn_thenIllegalArgumentException() {
         MethodCall methodCall = ReflectiveMethodCall.from(
                 new TestClass(),
-                TestInterface.class.getDeclaredMethods()[0],
+                TestInterface.class.getMethods()[0],
                 new Object[]{"input"}
         );
 
