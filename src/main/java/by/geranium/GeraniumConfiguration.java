@@ -64,4 +64,9 @@ public class GeraniumConfiguration {
                 )
         );
     }
+
+    public GeraniumConfiguration withDefaultInLoggingPattern() {
+        inLoggingPattern = "${methodName} > ${arguments}";
+        return this;
+    }
 }
