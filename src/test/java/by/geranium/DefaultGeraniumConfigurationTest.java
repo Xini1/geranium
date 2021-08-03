@@ -40,6 +40,25 @@ class DefaultGeraniumConfigurationTest {
                 .contains("DEBUG methodWithLogAnnotation > str = input");
     }
 
+    @Test
+    void givenDefaultValueSerializingStrategies_thenLogWithExpectedFormat() {
+        TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withGeraniumConfiguration(
+                        new GeraniumConfiguration()
+                                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                                .withDefaultValueSerializingStrategies()
+                                .withInLoggingPattern("")
+                                .withOutLoggingPattern("${returnValue}")
+                                .withThrowableLoggingPattern("")
+                )
+                .build()
+                .methodWithLogAnnotation("");
+
+        assertThat(loggingStrategyStub.getMessages())
+                .contains("DEBUG return value");
+    }
+
     private interface TestInterface {
 
         String methodWithLogAnnotation(String str);
