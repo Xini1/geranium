@@ -21,7 +21,7 @@ class DefaultGeraniumConfigurationTest {
     }
 
     @Test
-    void givenDefaultLogInPattern_thenLogWithExpectedFormat() {
+    void givenDefaultInLoggingPattern_thenLogWithExpectedFormat() {
         TestConfiguration.forInterface(TestInterface.class)
                 .forObject(new TestClass())
                 .withGeraniumConfiguration(
@@ -76,6 +76,26 @@ class DefaultGeraniumConfigurationTest {
 
         assertThat(loggingStrategyStub.getMessages())
                 .contains("DEBUG ");
+    }
+
+    @Test
+    void givenDefaultOutLoggingPattern_thenLogWithExpectedFormat() {
+        TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withGeraniumConfiguration(
+                        new GeraniumConfiguration()
+                                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                                .withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
+                                .withValueSerializingStrategy(new ToStringSerializingStrategy())
+                                .withInLoggingPattern("")
+                                .withDefaultOutLoggingPattern()
+                                .withThrowableLoggingPattern("")
+                )
+                .build()
+                .methodWithLogAnnotation("input");
+
+        assertThat(loggingStrategyStub.getMessages())
+                .contains("DEBUG methodWithLogAnnotation < return value");
     }
 
     private interface TestInterface {
