@@ -120,6 +120,23 @@ class DefaultGeraniumConfigurationTest {
                 .contains("ERROR methodThrowingException ! java.lang.RuntimeException message");
     }
 
+    @Test
+    void givenFullDefaultConfigurationAndMethodWithLogAnnotation_thenLogWithExpectedFormat() {
+        TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withGeraniumConfiguration(
+                        GeraniumConfiguration.byDefault(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                )
+                .build()
+                .methodWithLogAnnotation("input");
+
+        assertThat(loggingStrategyStub.getMessages())
+                .containsExactly(
+                        "DEBUG methodWithLogAnnotation > str = input",
+                        "DEBUG methodWithLogAnnotation < return value"
+                );
+    }
+
     private interface TestInterface {
 
         String methodWithLogAnnotation(String str);
