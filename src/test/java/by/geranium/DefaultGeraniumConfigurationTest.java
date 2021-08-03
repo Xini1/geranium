@@ -98,11 +98,33 @@ class DefaultGeraniumConfigurationTest {
                 .contains("DEBUG methodWithLogAnnotation < return value");
     }
 
+    @Test
+    void givenDefaultThrowableLoggingPattern_thenLogWithExpectedFormat() {
+        TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withGeraniumConfiguration(
+                        new GeraniumConfiguration()
+                                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                                .withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
+                                .withValueSerializingStrategy(new ToStringSerializingStrategy())
+                                .withInLoggingPattern("")
+                                .withOutLoggingPattern("")
+                                .withDefaultThrowableLoggingPattern()
+                )
+                .build()
+                .methodThrowingException();
+
+        assertThat(loggingStrategyStub.getMessages())
+                .contains("ERROR methodThrowingException ! java.lang.RuntimeException message");
+    }
+
     private interface TestInterface {
 
         String methodWithLogAnnotation(String str);
 
         void voidMethod();
+
+        void methodThrowingException();
     }
 
     public static class TestClass implements TestInterface {
@@ -116,6 +138,12 @@ class DefaultGeraniumConfigurationTest {
         @Log
         @Override
         public void voidMethod() {
+        }
+
+        @Log.Error
+        @Override
+        public void methodThrowingException() {
+            throw new RuntimeException("message");
         }
     }
 }
