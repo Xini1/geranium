@@ -41,7 +41,7 @@ class DefaultGeraniumConfigurationTest {
     }
 
     @Test
-    void givenDefaultValueSerializingStrategies_thenLogWithExpectedFormat() {
+    void givenDefaultValueSerializingStrategiesAndNonVoidMethod_thenLogWithExpectedFormat() {
         TestConfiguration.forInterface(TestInterface.class)
                 .forObject(new TestClass())
                 .withGeraniumConfiguration(

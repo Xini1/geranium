@@ -4,7 +4,9 @@ import by.geranium.core.Geranium;
 import by.geranium.core.Logger;
 import by.geranium.core.LoggingStrategyFactory;
 import by.geranium.core.Template;
+import by.geranium.core.ToStringSerializingStrategy;
 import by.geranium.core.ValueSerializingStrategy;
+import by.geranium.core.VoidReturnTypeSerializingStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,12 @@ public class GeraniumConfiguration {
 
     public GeraniumConfiguration withDefaultInLoggingPattern() {
         inLoggingPattern = "${methodName} > ${arguments}";
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultValueSerializingStrategies() {
+        valueSerializingStrategyList.add(new VoidReturnTypeSerializingStrategy());
+        valueSerializingStrategyList.add(new ToStringSerializingStrategy());
         return this;
     }
 }
