@@ -23,6 +23,15 @@ public class GeraniumConfiguration {
     private String outLoggingPattern;
     private String throwableLoggingPattern;
 
+    public static GeraniumConfiguration byDefault(LoggingStrategyFactory loggingStrategyFactory) {
+        return new GeraniumConfiguration()
+                .withLoggingStrategyFactory(loggingStrategyFactory)
+                .withDefaultInLoggingPattern()
+                .withDefaultOutLoggingPattern()
+                .withDefaultThrowableLoggingPattern()
+                .withDefaultValueSerializingStrategies();
+    }
+
     public GeraniumConfiguration withLoggingStrategyFactory(LoggingStrategyFactory loggingStrategyFactory) {
         this.loggingStrategyFactory = loggingStrategyFactory;
         return this;
