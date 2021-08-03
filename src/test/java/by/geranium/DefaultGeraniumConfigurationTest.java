@@ -59,9 +59,30 @@ class DefaultGeraniumConfigurationTest {
                 .contains("DEBUG return value");
     }
 
+    @Test
+    void givenDefaultValueSerializingStrategiesAndVoidMethod_thenLogWithExpectedFormat() {
+        TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withGeraniumConfiguration(
+                        new GeraniumConfiguration()
+                                .withLoggingStrategyFactory(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                                .withDefaultValueSerializingStrategies()
+                                .withInLoggingPattern("")
+                                .withOutLoggingPattern("${returnValue}")
+                                .withThrowableLoggingPattern("")
+                )
+                .build()
+                .voidMethod();
+
+        assertThat(loggingStrategyStub.getMessages())
+                .contains("DEBUG ");
+    }
+
     private interface TestInterface {
 
         String methodWithLogAnnotation(String str);
+
+        void voidMethod();
     }
 
     public static class TestClass implements TestInterface {
@@ -70,6 +91,11 @@ class DefaultGeraniumConfigurationTest {
         @Override
         public String methodWithLogAnnotation(String str) {
             return "return value";
+        }
+
+        @Log
+        @Override
+        public void voidMethod() {
         }
     }
 }
