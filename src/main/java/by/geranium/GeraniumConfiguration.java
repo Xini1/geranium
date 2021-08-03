@@ -77,4 +77,9 @@ public class GeraniumConfiguration {
         valueSerializingStrategyList.add(new ToStringSerializingStrategy());
         return this;
     }
+
+    public GeraniumConfiguration withDefaultOutLoggingPattern() {
+        outLoggingPattern = "${methodName} < ${returnValue}";
+        return this;
+    }
 }
