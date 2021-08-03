@@ -67,19 +67,24 @@ public class GeraniumConfiguration {
         );
     }
 
-    public GeraniumConfiguration withDefaultInLoggingPattern() {
-        inLoggingPattern = "${methodName} > ${arguments}";
-        return this;
-    }
-
     public GeraniumConfiguration withDefaultValueSerializingStrategies() {
         valueSerializingStrategyList.add(new VoidReturnTypeSerializingStrategy());
         valueSerializingStrategyList.add(new ToStringSerializingStrategy());
         return this;
     }
 
+    public GeraniumConfiguration withDefaultInLoggingPattern() {
+        inLoggingPattern = "${methodName} > ${arguments}";
+        return this;
+    }
+
     public GeraniumConfiguration withDefaultOutLoggingPattern() {
         outLoggingPattern = "${methodName} < ${returnValue}";
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultThrowableLoggingPattern() {
+        throwableLoggingPattern = "${methodName} ! ${throwableClass} ${throwableMessage}";
         return this;
     }
 }

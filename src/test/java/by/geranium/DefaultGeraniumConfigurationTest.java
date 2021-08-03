@@ -1,6 +1,7 @@
 package by.geranium;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import by.geranium.annotation.Log;
 import by.geranium.core.ToStringSerializingStrategy;
@@ -100,7 +101,7 @@ class DefaultGeraniumConfigurationTest {
 
     @Test
     void givenDefaultThrowableLoggingPattern_thenLogWithExpectedFormat() {
-        TestConfiguration.forInterface(TestInterface.class)
+        TestInterface testObject = TestConfiguration.forInterface(TestInterface.class)
                 .forObject(new TestClass())
                 .withGeraniumConfiguration(
                         new GeraniumConfiguration()
@@ -111,8 +112,9 @@ class DefaultGeraniumConfigurationTest {
                                 .withOutLoggingPattern("")
                                 .withDefaultThrowableLoggingPattern()
                 )
-                .build()
-                .methodThrowingException();
+                .build();
+
+        assertThatThrownBy(testObject::methodThrowingException).isInstanceOf(RuntimeException.class);
 
         assertThat(loggingStrategyStub.getMessages())
                 .contains("ERROR methodThrowingException ! java.lang.RuntimeException message");
