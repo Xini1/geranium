@@ -3,6 +3,7 @@ package by.geranium;
 import by.geranium.core.Geranium;
 import by.geranium.core.Logger;
 import by.geranium.core.LoggingStrategyFactory;
+import by.geranium.core.SupportedPlaceholders;
 import by.geranium.core.Template;
 import by.geranium.core.ToStringSerializingStrategy;
 import by.geranium.core.ValueSerializingStrategy;
@@ -47,6 +48,41 @@ public class GeraniumConfiguration {
         return this;
     }
 
+    public GeraniumConfiguration withDefaultValueSerializingStrategies() {
+        valueSerializingStrategyList.add(new VoidReturnTypeSerializingStrategy());
+        valueSerializingStrategyList.add(new ToStringSerializingStrategy());
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultInLoggingPattern() {
+        inLoggingPattern = String.format(
+                "%s > %s",
+                SupportedPlaceholders.METHOD_NAME.placeholder(),
+                SupportedPlaceholders.ARGUMENTS.placeholder()
+        );
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultOutLoggingPattern() {
+        outLoggingPattern = String.format(
+                "%s < %s",
+                SupportedPlaceholders.METHOD_NAME.placeholder(),
+                SupportedPlaceholders.RETURN_VALUE.placeholder()
+        );
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultThrowableLoggingPattern() {
+        throwableLoggingPattern = String.format(
+                "%s ! %s %s",
+                SupportedPlaceholders.METHOD_NAME.placeholder(),
+                SupportedPlaceholders.THROWABLE_CLASS.placeholder(),
+                SupportedPlaceholders.THROWABLE_MESSAGE.placeholder()
+
+        );
+        return this;
+    }
+
     public Geranium build() {
         if (loggingStrategyFactory == null) {
             throw new IllegalArgumentException("Logging strategy factory should not be null");
@@ -65,26 +101,5 @@ public class GeraniumConfiguration {
                         Template.from(throwableLoggingPattern)
                 )
         );
-    }
-
-    public GeraniumConfiguration withDefaultValueSerializingStrategies() {
-        valueSerializingStrategyList.add(new VoidReturnTypeSerializingStrategy());
-        valueSerializingStrategyList.add(new ToStringSerializingStrategy());
-        return this;
-    }
-
-    public GeraniumConfiguration withDefaultInLoggingPattern() {
-        inLoggingPattern = "${methodName} > ${arguments}";
-        return this;
-    }
-
-    public GeraniumConfiguration withDefaultOutLoggingPattern() {
-        outLoggingPattern = "${methodName} < ${returnValue}";
-        return this;
-    }
-
-    public GeraniumConfiguration withDefaultThrowableLoggingPattern() {
-        throwableLoggingPattern = "${methodName} ! ${throwableClass} ${throwableMessage}";
-        return this;
     }
 }
