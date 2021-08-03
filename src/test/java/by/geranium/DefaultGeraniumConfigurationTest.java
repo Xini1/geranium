@@ -137,6 +137,24 @@ class DefaultGeraniumConfigurationTest {
                 );
     }
 
+    @Test
+    void givenFullDefaultConfigurationAndMethodThrowingException_thenLogWithExpectedFormat() {
+        TestInterface testObject = TestConfiguration.forInterface(TestInterface.class)
+                .forObject(new TestClass())
+                .withGeraniumConfiguration(
+                        GeraniumConfiguration.byDefault(new LoggingStrategyFactoryStub(loggingStrategyStub))
+                )
+                .build();
+
+        assertThatThrownBy(testObject::methodThrowingException).isInstanceOf(RuntimeException.class);
+
+        assertThat(loggingStrategyStub.getMessages())
+                .containsExactly(
+                        "OFF methodThrowingException > ",
+                        "ERROR methodThrowingException ! java.lang.RuntimeException message"
+                );
+    }
+
     private interface TestInterface {
 
         String methodWithLogAnnotation(String str);
