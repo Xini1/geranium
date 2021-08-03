@@ -3,8 +3,11 @@ package by.geranium;
 import by.geranium.core.Geranium;
 import by.geranium.core.Logger;
 import by.geranium.core.LoggingStrategyFactory;
+import by.geranium.core.SupportedPlaceholders;
 import by.geranium.core.Template;
+import by.geranium.core.ToStringSerializingStrategy;
 import by.geranium.core.ValueSerializingStrategy;
+import by.geranium.core.VoidReturnTypeSerializingStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,15 @@ public class GeraniumConfiguration {
     private String inLoggingPattern;
     private String outLoggingPattern;
     private String throwableLoggingPattern;
+
+    public static GeraniumConfiguration byDefault(LoggingStrategyFactory loggingStrategyFactory) {
+        return new GeraniumConfiguration()
+                .withLoggingStrategyFactory(loggingStrategyFactory)
+                .withDefaultInLoggingPattern()
+                .withDefaultOutLoggingPattern()
+                .withDefaultThrowableLoggingPattern()
+                .withDefaultValueSerializingStrategies();
+    }
 
     public GeraniumConfiguration withLoggingStrategyFactory(LoggingStrategyFactory loggingStrategyFactory) {
         this.loggingStrategyFactory = loggingStrategyFactory;
@@ -42,6 +54,41 @@ public class GeraniumConfiguration {
 
     public GeraniumConfiguration withThrowableLoggingPattern(String pattern) {
         throwableLoggingPattern = pattern;
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultValueSerializingStrategies() {
+        valueSerializingStrategyList.add(new VoidReturnTypeSerializingStrategy());
+        valueSerializingStrategyList.add(new ToStringSerializingStrategy());
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultInLoggingPattern() {
+        inLoggingPattern = String.format(
+                "%s > %s",
+                SupportedPlaceholders.METHOD_NAME.placeholder(),
+                SupportedPlaceholders.ARGUMENTS.placeholder()
+        );
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultOutLoggingPattern() {
+        outLoggingPattern = String.format(
+                "%s < %s",
+                SupportedPlaceholders.METHOD_NAME.placeholder(),
+                SupportedPlaceholders.RETURN_VALUE.placeholder()
+        );
+        return this;
+    }
+
+    public GeraniumConfiguration withDefaultThrowableLoggingPattern() {
+        throwableLoggingPattern = String.format(
+                "%s ! %s %s",
+                SupportedPlaceholders.METHOD_NAME.placeholder(),
+                SupportedPlaceholders.THROWABLE_CLASS.placeholder(),
+                SupportedPlaceholders.THROWABLE_MESSAGE.placeholder()
+
+        );
         return this;
     }
 

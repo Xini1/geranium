@@ -9,6 +9,7 @@ import by.geranium.core.VoidReturnTypeSerializingStrategy;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Maxim Tereshchenko
@@ -22,6 +23,7 @@ public class TestConfiguration<I, T extends I> {
     private String inLoggingPattern = "${methodName} > ${arguments}";
     private String outLoggingPattern = "${methodName} < ${returnValue}";
     private String throwableLoggingPattern = "${methodName} ! ${throwableClass} ${throwableMessage}";
+    private GeraniumConfiguration geraniumConfiguration;
 
     private TestConfiguration(Class<I> interfaceClass, T object) {
         this.interfaceClass = interfaceClass;
@@ -58,7 +60,27 @@ public class TestConfiguration<I, T extends I> {
         return this;
     }
 
+    public TestConfiguration<I, T> withGeraniumConfiguration(GeraniumConfiguration geraniumConfiguration) {
+        this.geraniumConfiguration = geraniumConfiguration;
+        return this;
+    }
+
     public I build() {
+        return interfaceClass.cast(
+                Proxy.newProxyInstance(
+                        interfaceClass.getClassLoader(),
+                        object.getClass().getInterfaces(),
+                        new InvocationHandlerAdapter(
+                                Optional.ofNullable(geraniumConfiguration)
+                                        .orElseGet(this::configureGeranium)
+                                        .build(),
+                                object
+                        )
+                )
+        );
+    }
+
+    private GeraniumConfiguration configureGeranium() {
         var geraniumConfiguration = new GeraniumConfiguration()
                 .withLoggingStrategyFactory(loggingStrategyFactory)
                 .withInLoggingPattern(inLoggingPattern)
@@ -69,16 +91,7 @@ public class TestConfiguration<I, T extends I> {
         geraniumConfiguration.withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
                 .withValueSerializingStrategy(new ToStringSerializingStrategy());
 
-        return interfaceClass.cast(
-                Proxy.newProxyInstance(
-                        interfaceClass.getClassLoader(),
-                        object.getClass().getInterfaces(),
-                        new InvocationHandlerAdapter(
-                                geraniumConfiguration.build(),
-                                object
-                        )
-                )
-        );
+        return geraniumConfiguration;
     }
 
     public static class Builder<I> {
