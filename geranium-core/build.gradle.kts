@@ -1,5 +1,6 @@
 plugins {
     java
+    `java-test-fixtures`
 }
 
 group = "by.geranium"
@@ -12,10 +13,6 @@ repositories {
 dependencies {
     compileOnly(Dependencies.lombok)
     annotationProcessor(Dependencies.lombok)
-
-    compileOnly(Dependencies.slf4j)
-    implementation("org.springframework.boot:spring-boot-starter-aop:2.5.2")
-    implementation("org.springframework.boot:spring-boot-starter-test:2.5.2")
 
     testCompileOnly(Dependencies.junitApi)
     testRuntimeOnly(Dependencies.junitEngine)

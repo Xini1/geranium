@@ -81,17 +81,17 @@ public class TestConfiguration<I, T extends I> {
     }
 
     private GeraniumConfiguration configureGeranium() {
-        var geraniumConfiguration = new GeraniumConfiguration()
+        var newGeraniumConfiguration = new GeraniumConfiguration()
                 .withLoggingStrategyFactory(loggingStrategyFactory)
                 .withInLoggingPattern(inLoggingPattern)
                 .withOutLoggingPattern(outLoggingPattern)
                 .withThrowableLoggingPattern(throwableLoggingPattern);
 
-        valueSerializerList.forEach(geraniumConfiguration::withValueSerializingStrategy);
-        geraniumConfiguration.withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
+        valueSerializerList.forEach(newGeraniumConfiguration::withValueSerializingStrategy);
+        newGeraniumConfiguration.withValueSerializingStrategy(new VoidReturnTypeSerializingStrategy())
                 .withValueSerializingStrategy(new ToStringSerializingStrategy());
 
-        return geraniumConfiguration;
+        return newGeraniumConfiguration;
     }
 
     public static class Builder<I> {
