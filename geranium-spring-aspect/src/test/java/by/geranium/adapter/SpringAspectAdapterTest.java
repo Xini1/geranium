@@ -1,6 +1,5 @@
 package by.geranium.adapter;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -8,6 +7,7 @@ import by.geranium.annotation.Log;
 import by.geranium.core.Geranium;
 import by.geranium.core.LoggingLevel;
 import by.geranium.core.MethodCall;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -39,7 +39,7 @@ class SpringAspectAdapterTest {
         testClass.methodWithLogAnnotation();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
-        assertThat(methodCallArgumentCaptor.getValue())
+        Assertions.assertThat(methodCallArgumentCaptor.getValue())
                 .extracting(
                         MethodCall::targetClass,
                         MethodCall::methodArguments,
@@ -65,7 +65,7 @@ class SpringAspectAdapterTest {
         testClass.methodWithLogInAnnotation();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
-        assertThat(methodCallArgumentCaptor.getValue())
+        Assertions.assertThat(methodCallArgumentCaptor.getValue())
                 .extracting(
                         MethodCall::targetClass,
                         MethodCall::methodArguments,
@@ -91,7 +91,7 @@ class SpringAspectAdapterTest {
         testClass.methodWithLogOutAnnotation();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
-        assertThat(methodCallArgumentCaptor.getValue())
+        Assertions.assertThat(methodCallArgumentCaptor.getValue())
                 .extracting(
                         MethodCall::targetClass,
                         MethodCall::methodArguments,
@@ -117,7 +117,7 @@ class SpringAspectAdapterTest {
         testClass.methodWithBothLogInOutAnnotations();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
-        assertThat(methodCallArgumentCaptor.getValue())
+        Assertions.assertThat(methodCallArgumentCaptor.getValue())
                 .extracting(
                         MethodCall::targetClass,
                         MethodCall::methodArguments,
@@ -143,7 +143,7 @@ class SpringAspectAdapterTest {
         testClass.methodWithBothLogInOutAndPlainLogAnnotations();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
-        assertThat(methodCallArgumentCaptor.getValue())
+        Assertions.assertThat(methodCallArgumentCaptor.getValue())
                 .extracting(
                         MethodCall::targetClass,
                         MethodCall::methodArguments,
@@ -169,7 +169,7 @@ class SpringAspectAdapterTest {
         testClass.methodWithLogErrorAnnotation();
 
         verify(geranium).logMethodCall(methodCallArgumentCaptor.capture());
-        assertThat(methodCallArgumentCaptor.getValue())
+        Assertions.assertThat(methodCallArgumentCaptor.getValue())
                 .extracting(
                         MethodCall::targetClass,
                         MethodCall::methodArguments,

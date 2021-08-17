@@ -1,12 +1,13 @@
-package by.geranium.core;
-
-import static org.assertj.core.api.Assertions.assertThat;
+package by.geranium.adapter;
 
 import by.geranium.GeraniumConfiguration;
 import by.geranium.LoggingStrategyFactoryStub;
 import by.geranium.LoggingStrategyStub;
-import by.geranium.adapter.SpringAspectAdapter;
 import by.geranium.annotation.Log;
+import by.geranium.core.LoggingLevel;
+import by.geranium.core.ToStringSerializingStrategy;
+import by.geranium.core.VoidReturnTypeSerializingStrategy;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +37,7 @@ class InheritanceTest {
     void givenParentMethodWithAnnotation_thenLogLevelTrace() {
         testClass.parentMethodWithAnnotation();
 
-        assertThat(loggingStrategyStub.getMessages())
+        Assertions.assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "TRACE parentMethodWithAnnotation > ",
                         "TRACE parentMethodWithAnnotation < "
@@ -47,7 +48,7 @@ class InheritanceTest {
     void givenParentMethodWithoutAnnotation_thenLogLevelDebug() {
         testClass.parentMethodWithoutAnnotation();
 
-        assertThat(loggingStrategyStub.getMessages())
+        Assertions.assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "DEBUG parentMethodWithoutAnnotation > ",
                         "DEBUG parentMethodWithoutAnnotation < "
@@ -58,7 +59,7 @@ class InheritanceTest {
     void givenClassMethodWithAnnotation_thenLogLevelInfo() {
         testClass.classMethodWithAnnotation();
 
-        assertThat(loggingStrategyStub.getMessages())
+        Assertions.assertThat(loggingStrategyStub.getMessages())
                 .containsExactly(
                         "INFO classMethodWithAnnotation > ",
                         "INFO classMethodWithAnnotation < "
