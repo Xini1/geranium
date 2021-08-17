@@ -31,7 +31,7 @@ public class TestConfiguration<I, T extends I> {
         valueSerializerList = new ArrayList<>();
     }
 
-    public static <U> TestConfiguration.Builder<U> forInterface(Class<U> interfaceClass) {
+    public static <U> Builder<U> forInterface(Class<U> interfaceClass) {
         return new Builder<>(interfaceClass);
     }
 
